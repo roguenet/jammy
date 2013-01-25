@@ -1,12 +1,16 @@
 <html>
     <head>
         <title>Jammy!</title>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+        <script type="text/javascript" src="swfobject.js"></script>
         <script type="text/javascript">
             var flashvars = {};
             var swf = "jammy.swf?" + Math.floor(Math.random() * 10000);
             swfobject.embedSWF(swf, "content", "1024", "768", "10", null, flashvars,
                 {wmode: "direct"});
+
+            version = "2013-01-25 11:30:43";
+            if (version.indexOf("@") == 0) version = "DEVELOPMENT VERSION";
+            document.title += " [" + version + "]";
         </script>
         <style type="text/css">
             body {
@@ -19,12 +23,23 @@
                 border: 4px solid steelblue;
                 display: inline-block;
             }
+            #version {
+                margin: 10px;
+                font-size: 12pt;
+                font-family: Verdana,sans-serif;
+                color: steelblue;
+            }
         </style>
     </head>
     <body>
         <div id="container">
             <div id="content"></div>
         </div>
+        <div id="version"></div>
     </body>
+    <script type="text/javascript">
+        document.getElementById("version").appendChild(
+            document.createTextNode("Build Version: " + version));
+    </script>
 </html>
 
