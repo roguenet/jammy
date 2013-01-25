@@ -12,7 +12,7 @@ import starling.core.Starling;
 import starling.events.Event;
 import starling.utils.AssetManager;
 
-[SWF(width="1280", height="700", frameRate="60", backgroundColor="#222222")]
+[SWF(width="1024", height="768", frameRate="60", backgroundColor="#222222")]
 public class JammyMain extends Sprite
 {
     public function JammyMain ()
