@@ -21,7 +21,7 @@
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.5"/>
     <mxmlc srcdir="${asrc.dir}" libpath="${aslib.path}"
       dest="${deploy.dir}/${ant.project.name}.swf" static-lrsl="true"
-      main="org/roguenet/jammy/JammyMain.as">
+      main="org/roguenet/jammy/Jammy.as">
       <arg value="-swf-version=13"/>
     </mxmlc>
   </target>
