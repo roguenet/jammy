@@ -1,7 +1,9 @@
 <?xml version="1.0" standalone="yes"?>
 <project name="jammy" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <property name="asrc.dir" location="src/main/as"/>
+  <property name="web.dir" location="src/main/web"/>
   <property name="deploy.dir" location="dist"/>
+  <property name="pages.dir" location="../jammy-pages"/>
 
   <property name="ooo-build.vers" value="2.5"/>
   <ant antfile="bootstrap.xml"/>
@@ -24,5 +26,18 @@
       main="org/roguenet/jammy/Jammy.as">
       <arg value="-swf-version=13"/>
     </mxmlc>
+  </target>
+
+  <target name="deploy" depends="compile" description="Build and deploy to jammy-pages">
+    <tstamp><format property="build.time" pattern="yyyy-MM-dd HH:mm:ss"/></tstamp>
+    <copy tofile="${pages.dir}/index.html" file="${web.dir}/jammy.html" overwrite="true">
+      <filterset>
+        <filter token="buildstamp" value="${build.time}"/>
+      </filterset>
+    </copy>
+    <copy todir="${pages.dir}">
+      <fileset dir="${web.dir}" excludes="jammy.html,jammy.swf"/>
+      <fileset dir="${deploy.dir}" includes="jammy.swf"/>
+    </copy>
   </target>
 </project>
