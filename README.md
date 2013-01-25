@@ -1,5 +1,5 @@
-ggj2012
-=======
+Jammy
+=====
 
 Nathan and Krysta Curtis' Global Game Jam game, January 2012
 
