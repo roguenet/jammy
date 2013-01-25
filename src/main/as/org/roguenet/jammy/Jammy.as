@@ -40,6 +40,8 @@ class LoadingMode extends AppMode
     {
         var resources :ResourceSet = new ResourceSet();
         resources.add({type: "flump", name: "flump", data: FLUMP});
+        resources.add({type: "flump", name: "jammy", data: JAMMY});
+        resources.add({type: "", name: "locksmith", data: LOCKSMITH});
         resources.load(
             function () :void {
                 // resources loaded. kick off the game.
@@ -55,4 +57,8 @@ class LoadingMode extends AppMode
 
     [Embed(source="../../../../resources/flump.zip", mimeType="application/octet-stream")]
     protected static const FLUMP :Class;
+    [Embed(source="../../../../resources/default/jammy.zip", mimeType="application/octet-stream")]
+    protected static const JAMMY :Class;
+    [Embed(source="../../../../resources/locksmith.png", mimeType="application/octet-stream")]
+    protected static const LOCKSMITH :Class;
 }

@@ -16,6 +16,9 @@ public class GameMode extends AppMode
         obj.display.y = Jammy.HEIGHT / 2;
         addObject(obj, this.modeSprite);
 
+        var jammy :MovieObject = MovieObject.create("jammy/triangle_anim");
+        addObject(jammy, this.modeSprite);
+
         var pause :Button = new SimpleTextButton("Pause", 18);
         pause.display.x = (Jammy.WIDTH - pause.display.width) * 0.5;
         pause.display.y = Jammy.HEIGHT - pause.display.height - 20;
