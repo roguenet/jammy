@@ -5,6 +5,7 @@ import aspire.geom.Vector2;
 import flash.geom.Rectangle;
 
 import flashbang.GameObject;
+import flashbang.util.Collision;
 
 import org.osflash.signals.Signal;
 
@@ -64,6 +65,22 @@ public class Throbber extends GameObject
             _bounds.width = _bounds.height = _radius * 2;
         }
         return _bounds.clone();
+    }
+
+    /**
+     * Returns true if our circle contains or intersects the given point.
+     */
+    public function contains (pos :Vector2) :Boolean
+    {
+        return Collision.circlesIntersect(_pos, _radius, pos, 0);
+    }
+
+    /**
+     * Returns true if our circle intersects with the provided circle.
+     */
+    public function intersects (pos :Vector2, radius :int) :Boolean
+    {
+        return Collision.circlesIntersect(_pos, _radius, pos, radius);
     }
 
     override public function toString () :String

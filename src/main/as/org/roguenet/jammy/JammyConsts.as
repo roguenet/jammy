@@ -10,6 +10,14 @@ public class JammyConsts
     public static const WIDTH :int = 1024;
     public static const HEIGHT :int = 768;
 
+    public static const BOARD_X :int = 0;
+    public static const BOARD_Y :int = 0;
+    public static const BOARD_WIDTH :int = WIDTH;
+    public static const BOARD_HEIGHT :int = HEIGHT;
+
+    public static const PLACEMENT_ATTEMPTS_MAX :int = 100;
+    public static const PLACEMENT_BUFFER :int = 10;
+
     public static const THROBBER_MAX_RADIUS :int = 70;
     public static const THROBBER_MIN_RADIUS :int = 30;
 
