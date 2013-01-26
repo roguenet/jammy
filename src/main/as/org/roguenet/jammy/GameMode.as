@@ -77,7 +77,7 @@ public class GameMode extends AppMode
     protected function throbbed () :void
     {
         // work with an array copy, as some throbbers may get removed during this process
-        for each (var throbber :Throbber in _throbbers.toArray()) throbber.grow();
+        for each (var throbber :Throbber in _throbbers.toArray()) throbber.levelUp();
         // add new throbbers every throb
         for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
     }
@@ -220,12 +220,10 @@ class ThrobTimer
         // if we've elapsed more than we should in the current half cycle, evolve some values
         if (_throbElapsed > _throbTime) {
             _throbElapsed = _throbElapsed % _throbTime;
-            if (_upThrob) {
-                throbbed.dispatch();
-            }
             _upThrob = !_upThrob;
             _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
                 Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
+            _dispatchedThrob = false;
         }
 
         // only throb if we're within the threshold.
@@ -235,8 +233,12 @@ class ThrobTimer
             (!_upThrob && _throbElapsed <= thresholdTime);
         if (doThrob) {
             if (_upThrob) {
-                _value =
-                    Easing.easeIn(MIN, MAX, _throbElapsed - thresholdTime, _throbTime - thresholdTime);
+                if (!_dispatchedThrob) {
+                    _dispatchedThrob = true;
+                    throbbed.dispatch();
+                }
+                _value = Easing.easeIn(
+                    MIN, MAX, _throbElapsed - thresholdTime, _throbTime - thresholdTime);
             } else {
                 _value = Easing.easeOut(MAX, MIN, _throbElapsed, thresholdTime);
             }
@@ -257,6 +259,7 @@ class ThrobTimer
     protected var _throbTime :Number = JammyConsts.THROB_TIME_MAX / 2;
     protected var _totalTimeElapsed :Number = 0;
     protected var _upThrob :Boolean = true;
+    protected var _dispatchedThrob :Boolean = false;
 }
 
 class Quadrant extends Enum

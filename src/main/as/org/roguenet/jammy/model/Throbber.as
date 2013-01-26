@@ -14,13 +14,12 @@ import org.roguenet.jammy.JammyConsts;
 public class Throbber extends GameObject
 {
     public const positionChanged :Signal = new Signal();
-    public const radiusChanged :Signal = new Signal();
 
     public function Throbber (position :Vector2, color :ThrobberColor = null,
         value :ThrobberValue = null)
     {
         _pos = position;
-        grow();
+        setRadius(radiusForLevel(_level));
         _color = color == null ? ThrobberColor.random() : color;
         _value = value == null ? ThrobberValue.random() : value;
     }
@@ -52,24 +51,13 @@ public class Throbber extends GameObject
         positionChanged.dispatch(pos);
     }
 
-    public function grow () :void
+    public function levelUp () :void
     {
         if (++_level == JammyConsts.THROBBER_LEVELS) {
             destroySelf();
         } else {
-            setRadius(Easing.linear(MIN_RADIUS, MAX_RADIUS, _level, LEVELS - 1));
+            addTask(new RadiusTask(radiusForLevel(_level)));
         }
-    }
-
-    public function getBounds () :Rectangle
-    {
-        if (_bounds == null) {
-            _bounds = new Rectangle();
-            _bounds.left = _pos.x - _radius;
-            _bounds.top = _pos.y - _radius;
-            _bounds.width = _bounds.height = _radius * 2;
-        }
-        return _bounds.clone();
     }
 
     /**
@@ -106,15 +94,19 @@ public class Throbber extends GameObject
         return Collision.circlesIntersect(_pos, MAX_RADIUS, pos, radius);
     }
 
+    public function setRadius (radius :int) :void
+    {
+        _radius = radius;
+    }
+
     override public function toString () :String
     {
         return "Throbber [" + _pos + ", " + _radius + ", " + _color + ", " + _value + "]";
     }
 
-    protected function setRadius (radius :int) :void
+    protected static function radiusForLevel (level :int) :Number
     {
-        _bounds = null;
-        radiusChanged.dispatch(_radius = radius);
+        return Easing.linear(MIN_RADIUS, MAX_RADIUS, Math.min(LEVELS - 1, level), LEVELS - 1);
     }
 
     protected static const MAX_RADIUS :int = JammyConsts.THROBBER_MAX_RADIUS;
@@ -125,8 +117,39 @@ public class Throbber extends GameObject
     protected var _value :ThrobberValue;
     protected var _pos :Vector2;
     protected var _radius :int;
-    protected var _level :int = -1;
+    protected var _level :int = 0;
 
     protected var _bounds :Rectangle; // cached
 }
+}
+
+import flashbang.GameObject;
+import flashbang.tasks.InterpolatingTask;
+import flashbang.util.Easing;
+
+import org.roguenet.jammy.JammyConsts;
+import org.roguenet.jammy.model.Throbber;
+
+class RadiusTask extends InterpolatingTask
+{
+    public function RadiusTask (radius :Number)
+    {
+        super((1 - JammyConsts.THROB_TIMING_THRESHOLD) * (JammyConsts.THROB_TIME_MIN / 2),
+            Easing.easeIn);
+        _to = radius;
+    }
+
+    override public function update (dt :Number, obj :GameObject) :Boolean
+    {
+        if (_elapsedTime == 0) {
+            _from = Throbber(obj).radius;
+        }
+
+        _elapsedTime += dt;
+        Throbber(obj).setRadius(interpolate(_from, _to));
+        return (_elapsedTime >= _totalTime);
+    }
+
+    protected var _to :Number;
+    protected var _from :Number;
 }
