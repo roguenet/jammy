@@ -15,6 +15,7 @@ public class JammyContext
 
     public static const THROB_TIME_MAX :Number = 2.0;
     public static const THROB_TIME_MIN :Number = 0.3;
+    public static const THROB_TIMING_THRESHOLD :Number = 0.8;
     public static const THROB_RAMP_UP_TIME :Number = 15.0;
     public static const THROB_MIN :Number = 0.65;
     public static const THROB_MAX :Number = 1;
