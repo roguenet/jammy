@@ -10,6 +10,7 @@ import aspire.util.Sets;
 import flash.geom.Rectangle;
 
 import flashbang.AppMode;
+import flashbang.GameObjectRef;
 
 import org.roguenet.jammy.model.Throbber;
 import org.roguenet.jammy.view.ThrobberSprite;
@@ -37,14 +38,23 @@ public class GameMode extends AppMode
         super.update(dt);
     }
 
+    override public function destroyObject (ref :GameObjectRef) :void
+    {
+        // must do this before the call to super, or ref.object is gone
+        if (ref.object is Throbber) {
+            log.info("removing throbber", "throbber", ref.object);
+            if (!_throbbers.remove(Throbber(ref.object))) {
+                log.warning("Throbber was not found in _throbber", "throbber", ref.object);
+            }
+        }
+
+        super.destroyObject(ref);
+    }
+
     protected function touchedThrobber (throbber :Throbber) :void
     {
         log.info("touchedThrobber", "throbber", throbber);
         destroyObject(throbber.ref);
-        if (!_throbbers.remove(throbber)) {
-            log.warning("Throbber was not found in _throbber", "throbber", throbber);
-        }
-        addThrobber();
     }
 
     protected function addThrobber () :void
