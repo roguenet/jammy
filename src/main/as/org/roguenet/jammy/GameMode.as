@@ -21,10 +21,10 @@ public class GameMode extends AppMode
     {
         super.setup();
 
-        for (var ii :int = 0; ii < 10; ii++) {
+        for (var ii :int = 0; ii < JammyConsts.INITIAL_THROBBER_COUNT; ii++) {
             addThrobber();
         }
-        _regs.addSignalListener(_timer.throbbed, F.callback(growThrobbers));
+        _regs.addSignalListener(_timer.throbbed, F.callback(throbbed));
     }
 
     public function get throb () :Number
@@ -42,7 +42,6 @@ public class GameMode extends AppMode
     {
         // must do this before the call to super, or ref.object is gone
         if (ref.object is Throbber) {
-            log.info("removing throbber", "throbber", ref.object);
             if (!_throbbers.remove(Throbber(ref.object))) {
                 log.warning("Throbber was not found in _throbber", "throbber", ref.object);
             }
@@ -53,7 +52,6 @@ public class GameMode extends AppMode
 
     protected function touchedThrobber (throbber :Throbber) :void
     {
-        log.info("touchedThrobber", "throbber", throbber);
         destroyObject(throbber.ref);
     }
 
@@ -71,10 +69,12 @@ public class GameMode extends AppMode
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
     }
 
-    protected function growThrobbers () :void
+    protected function throbbed () :void
     {
-        // wortk with an array copy, as some throbbers may get removed during this process
+        // work with an array copy, as some throbbers may get removed during this process
         for each (var throbber :Throbber in _throbbers.toArray()) throbber.grow();
+        // add new throbbers every throb
+        for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
     }
 
     protected function randomPos () :Vector2

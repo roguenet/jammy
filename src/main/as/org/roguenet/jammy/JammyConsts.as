@@ -32,5 +32,8 @@ public class JammyConsts
     public static const THROBER_COUNT_MAX :int = 10;
 
     public static const THROBBER_LEVELS :int = 5;
+
+    public static const INITIAL_THROBBER_COUNT :int = 2;
+    public static const THROBBERS_PER_THROB :int = INITIAL_THROBBER_COUNT;
 }
 }
