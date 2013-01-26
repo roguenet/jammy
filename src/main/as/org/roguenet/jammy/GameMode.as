@@ -13,6 +13,7 @@ import flashbang.AppMode;
 import flashbang.GameObjectRef;
 
 import org.roguenet.jammy.model.Throbber;
+import org.roguenet.jammy.view.HeaderSprite;
 import org.roguenet.jammy.view.ThrobberSprite;
 
 public class GameMode extends AppMode
@@ -21,6 +22,7 @@ public class GameMode extends AppMode
     {
         super.setup();
 
+        addObject(_header = new HeaderSprite(), modeSprite);
         for (var ii :int = 0; ii < JammyConsts.INITIAL_THROBBER_COUNT; ii++) {
             addThrobber();
         }
@@ -42,9 +44,7 @@ public class GameMode extends AppMode
     {
         // must do this before the call to super, or ref.object is gone
         if (ref.object is Throbber) {
-            if (!_throbbers.remove(Throbber(ref.object))) {
-                log.warning("Throbber was not found in _throbber", "throbber", ref.object);
-            }
+            _throbbers.remove(Throbber(ref.object));
         }
 
         super.destroyObject(ref);
@@ -53,6 +53,7 @@ public class GameMode extends AppMode
     protected function touchedThrobber (throbber :Throbber) :void
     {
         destroyObject(throbber.ref);
+        _header.setPreviousThrobber(throbber);
     }
 
     protected function addThrobber () :void
@@ -186,6 +187,7 @@ public class GameMode extends AppMode
             JammyConsts.BOARD_HEIGHT - PLACEMENT_DIST_MIN * 2);
 
     protected var _throbbers :Set = Sets.newSetOf(Throbber);
+    protected var _header :HeaderSprite;
     protected var _timer :ThrobTimer = new ThrobTimer();
 
     private static const log :Log = Log.getLog(GameMode);
