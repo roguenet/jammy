@@ -29,7 +29,7 @@ public class JammyConsts
     public static const THROB_MAX :Number = 1.25;
 
     // with the configured sizes, we can't fit much more than 10 on the board.
-    public static const THROBER_COUNT_MAX :int = 10;
+    public static const THROBBER_COUNT_MAX :int = 10;
 
     public static const THROBBER_LEVELS :int = 5;
 

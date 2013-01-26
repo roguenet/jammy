@@ -57,6 +57,11 @@ public class GameMode extends AppMode
 
     protected function addThrobber () :void
     {
+        if (_throbbers.size() >= JammyConsts.THROBBER_COUNT_MAX) {
+            log.error("Already at max throbber count, not adding more");
+            return;
+        }
+
         var pos :Vector2 = randomPos();
         if (pos == null) {
             log.warning("Unable to add throbber, nowhere to put it");
