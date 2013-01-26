@@ -9,6 +9,7 @@ import flash.geom.Point;
 
 import flashbang.objects.SpriteObject;
 
+import org.roguenet.jammy.GameMode;
 import org.roguenet.jammy.JammyContext;
 import org.roguenet.jammy.model.Throbber;
 
@@ -23,11 +24,9 @@ public class ThrobberSprite extends SpriteObject
         _model = model;
         _model.addDependentObject(this);
         _regs.addSignalListener(_model.positionChanged, positionChanged);
-        _regs.addSignalListener(_model.radiusChanged, radiusChanged);
 
         buildView();
         positionChanged(_model.position);
-        radiusChanged(_model.radius);
 
         _regs.addSignalListener(touchEnded, function (touch :Touch) :void {
             log.info("touched", "throbber", _model, "touch", touch, "spritePos",
@@ -65,9 +64,22 @@ public class ThrobberSprite extends SpriteObject
         _sprite.y = pos.y;
     }
 
-    protected function radiusChanged (radius :int) :void
+    override protected function addedToMode () :void
     {
-        _sprite.scaleX = _sprite.scaleY = radius / JammyContext.THROBBER_MAX_RADIUS;
+        super.addedToMode();
+        updateRadius();
+    }
+
+    override protected function update (dt :Number) :void
+    {
+        super.update(dt);
+        updateRadius();
+    }
+
+    protected function updateRadius () :void
+    {
+        _sprite.scaleX = _sprite.scaleY =
+            GameMode(mode).throb * (_model.radius / JammyContext.THROBBER_MAX_RADIUS);
     }
 
     protected var _model :Throbber;
