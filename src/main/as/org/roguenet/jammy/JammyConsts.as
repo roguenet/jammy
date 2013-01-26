@@ -30,7 +30,7 @@ public class JammyConsts
     public static const THROB_TIMING_THRESHOLD :Number = 0.6;
     public static const THROB_RAMP_UP_TIME :Number = 15.0;
     public static const THROB_MIN :Number = 1;
-    public static const THROB_MAX :Number = 1.25;
+    public static const THROB_MAX :Number = 1.15;
 
     // with the configured sizes, we can't fit much more than 10 on the board.
     public static const THROBBER_COUNT_MAX :int = 10;
