@@ -11,6 +11,11 @@ public class ThrobberValue extends Enum
     public static const TWO :ThrobberValue = new ThrobberValue("TWO", "2");
     public static const THREE :ThrobberValue = new ThrobberValue("THREE", "3");
     public static const FOUR :ThrobberValue = new ThrobberValue("FOUR", "4");
+    public static const FIVE :ThrobberValue = new ThrobberValue("FIVE", "5");
+    public static const SIX :ThrobberValue = new ThrobberValue("SIX", "6");
+    public static const SEVEN :ThrobberValue = new ThrobberValue("SEVEN", "7");
+    public static const EIGHT :ThrobberValue = new ThrobberValue("EIGHT", "8");
+    public static const NINE :ThrobberValue = new ThrobberValue("NINE", "9");
     finishedEnumerating(ThrobberValue);
 
     public static function values () :Array
