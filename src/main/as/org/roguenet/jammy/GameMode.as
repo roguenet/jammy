@@ -62,9 +62,24 @@ public class GameMode extends AppMode
 
     protected function randomPos () :Vector2
     {
+        var quads :Array = Quadrant.values();
+        while (quads.length > 0) {
+            var quadIdx :int = RAND.getInt(quads.length);
+            var pos :Vector2 = randomPosInBounds(Quadrant(quads[quadIdx]).slice(PLACEMENT_BOUNDS));
+            if (pos != null) {
+                return pos;
+            }
+            quads.slice(quadIdx, 1);
+        }
+        log.error("Could not find a suitable random position!");
+        return null;
+    }
+
+    protected function randomPosInBounds (placementBounds :Rectangle) :Vector2
+    {
         for (var ii :int = 0; ii < JammyConsts.PLACEMENT_ATTEMPTS_MAX; ii++) {
             // first, pick a random point that is guaranteed not to intersect with a wall.
-            var pos :Vector2 = getRandomVector(PLACEMENT_BOUNDS);
+            var pos :Vector2 = getRandomVector(placementBounds);
 
             // make sure we're not inside any of the circles (immediately stop), or intersecting
             // with any circles (grow to avoid).
@@ -98,7 +113,7 @@ public class GameMode extends AppMode
                 // we can tune this to not move the thing so far if this algorithm has too much
                 // trouble finding a placement for a new throbber
                 var grownPos :Vector2 = quad.grow(pos, START_RADIUS + BUFFER);
-                if (!PLACEMENT_BOUNDS.contains(grownPos.x, grownPos.y)) {
+                if (!placementBounds.contains(grownPos.x, grownPos.y)) {
                     // we're too close to a wall
                     break;
                 }
@@ -110,7 +125,6 @@ public class GameMode extends AppMode
                 // else, try to grow again
             }
         }
-        log.error("Could not find a suitable random position!");
         return null;
     }
 
@@ -156,6 +170,8 @@ public class GameMode extends AppMode
 
 import aspire.geom.Vector2;
 import aspire.util.Enum;
+
+import flash.geom.Rectangle;
 
 import flashbang.util.Easing;
 
@@ -246,11 +262,17 @@ class Quadrant extends Enum
         return toAdd.addLocal(pos);
     }
 
+    public function slice (bounds :Rectangle) :Rectangle
+    {
+        var x :Number = bounds.x + bounds.width / 2 * Math.max(0, _unitVector.x);
+        var y :Number = bounds.y + bounds.height / 2 * Math.max(0, _unitVector.y);
+        return new Rectangle(x, y, bounds.width / 2, bounds.height / 2);
+    }
+
     public function Quadrant (name :String, unitVector :Vector2)
     {
         super(name);
         _unitVector = unitVector;
-        _unitVector.length = 1;
     }
 
     protected var _unitVector :Vector2;
