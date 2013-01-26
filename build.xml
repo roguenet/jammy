@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
-<project name="jammy" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+<project name="jammy" default="compile-swf" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <property name="asrc.dir" location="src/main/as"/>
   <property name="web.dir" location="src/main/web"/>
   <property name="rsrcs.dir" location="src/main/resources"/>
@@ -20,7 +20,7 @@
     <delete dir="${deploy.dir}"/>
   </target>
 
-  <target name="compile" depends="-prepare" description="Builds the swf">
+  <target name="compile-swf" depends="-prepare" description="Builds the swf">
     <mavendep pom="pom.xml" pathProp="aslib.path"/>
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.5"/>
     <mxmlc srcdir="${asrc.dir}" libpath="${aslib.path}"
@@ -30,7 +30,7 @@
     </mxmlc>
   </target>
 
-  <target name="compile_air" depends="-prepare">
+  <target name="compile-air" depends="-prepare">
     <mkdir dir="${ipa.dir}"/>
     <mavendep pom="pom.xml" pathProp="aslib.path"/>
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.5"/>
@@ -41,7 +41,7 @@
     </amxmlc>
   </target>
 
-  <target name="test_air">
+  <target name="test">
     <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/jammy-app.xml"/>
     <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/Default.png"/>
     <copy todir="${ipa.dir}/icons">
@@ -54,7 +54,7 @@
     </exec>
   </target>
 
-  <target name="deploy" depends="compile" description="Build and deploy to jammy-pages">
+  <target name="deploy" depends="compile-swf" description="Build and deploy to jammy-pages">
     <tstamp><format property="build.time" pattern="yyyy-MM-dd HH:mm:ss"/></tstamp>
     <copy tofile="${pages.dir}/index.html" file="${web.dir}/jammy.html" overwrite="true">
       <filterset>
