@@ -54,8 +54,13 @@ public class Throbber extends GameObject
 
     public function grow () :void
     {
-        setRadius(Easing.linear(JammyConsts.THROBBER_MIN_RADIUS, JammyConsts.THROBBER_MAX_RADIUS,
-            ++_level, JammyConsts.THROBBER_LEVELS));
+        if (++_level == JammyConsts.THROBBER_LEVELS) {
+            destroySelf();
+        } else {
+            setRadius(Easing.linear(
+                JammyConsts.THROBBER_MIN_RADIUS,  JammyConsts.THROBBER_MAX_RADIUS, _level,
+                JammyConsts.THROBBER_LEVELS - 1));
+        }
     }
 
     public function getBounds () :Rectangle
