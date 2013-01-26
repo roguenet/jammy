@@ -26,12 +26,17 @@ public class GameMode extends AppMode
         for (var ii :int = 0; ii < JammyConsts.INITIAL_THROBBER_COUNT; ii++) {
             addThrobber();
         }
-        _regs.addSignalListener(_timer.throbbed, F.callback(throbbed));
+        _regs.addSignalListener(_timer.throbStateChanged, throbStateChanged);
     }
 
     public function get throb () :Number
     {
         return _timer.value;
+    }
+
+    public function get throbState () :ThrobState
+    {
+        return _timer.state;
     }
 
     override public function update (dt :Number) :void
@@ -75,12 +80,14 @@ public class GameMode extends AppMode
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
     }
 
-    protected function throbbed () :void
+    protected function throbStateChanged (newState :ThrobState) :void
     {
-        // work with an array copy, as some throbbers may get removed during this process
-        for each (var throbber :Throbber in _throbbers.toArray()) throbber.levelUp();
-        // add new throbbers every throb
-        for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
+        if (newState == ThrobState.UP) {
+            // work with an array copy, as some throbbers may get removed during this process
+            for each (var throbber :Throbber in _throbbers.toArray()) throbber.levelUp();
+            // add new throbbers every throb
+            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
+        }
     }
 
     protected function randomPos () :Vector2
@@ -203,14 +210,20 @@ import flashbang.util.Easing;
 
 import org.osflash.signals.Signal;
 import org.roguenet.jammy.JammyConsts;
+import org.roguenet.jammy.ThrobState;
 
 class ThrobTimer
 {
-    public const throbbed :Signal = new Signal();
+    public const throbStateChanged :Signal = new Signal();
 
     public function get value () :Number
     {
         return _value;
+    }
+
+    public function get state () :ThrobState
+    {
+        return _state;
     }
 
     public function update (dt :Number) :void
@@ -219,39 +232,24 @@ class ThrobTimer
         _throbElapsed += dt;
         _totalTimeElapsed += dt;
 
-        // if we've elapsed more than we should in the current half cycle, evolve some values
-        if (_throbElapsed > _throbTime) {
-            _throbElapsed = _throbElapsed % _throbTime;
-            _upThrob = !_upThrob;
-            _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
-                Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
-            _dispatchedThrob = false;
+        var newState :ThrobState = _state.checkState(_throbElapsed, _throbTime);
+        if (newState != _state) {
+            if (newState.isUp() != _state.isUp()) {
+                _throbElapsed = _throbElapsed % _throbTime;
+                _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
+                    Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
+            }
+            changeState(newState);
         }
 
-        // only throb if we're within the threshold.
-        var thresholdTime :Number =
-            _upThrob ? THRESHOLD * _throbTime : (1 - THRESHOLD) * _throbTime;
-        var doThrob :Boolean = (_upThrob && _throbElapsed >= thresholdTime) ||
-            (!_upThrob && _throbElapsed <= thresholdTime);
-        if (doThrob) {
-            if (_upThrob) {
-                if (!_dispatchedThrob) {
-                    _dispatchedThrob = true;
-                    throbbed.dispatch();
-                }
-                _value = Easing.easeIn(
-                    MIN, MAX, _throbElapsed - thresholdTime, _throbTime - thresholdTime);
-            } else {
-                _value = Easing.easeOut(MAX, MIN, _throbElapsed, thresholdTime);
-            }
-        } else {
-            _value = MIN;
-        }
+        _value = _state.ease(_throbElapsed, _throbTime);
     }
 
-    protected static const MIN :Number = JammyConsts.THROB_MIN;
-    protected static const MAX :Number = JammyConsts.THROB_MAX;
-    protected static const THRESHOLD :Number = JammyConsts.THROB_TIMING_THRESHOLD;
+    protected function changeState (state :ThrobState) :void
+    {
+        throbStateChanged.dispatch(_state = state);
+    }
+
     protected static const HALF_TIME_MIN :Number = JammyConsts.THROB_TIME_MIN / 2;
     protected static const HALF_TIME_MAX :Number = JammyConsts.THROB_TIME_MAX / 2;
     protected static const RAMP_UP_TIME :Number = JammyConsts.THROB_RAMP_UP_TIME;
@@ -260,8 +258,7 @@ class ThrobTimer
     protected var _throbElapsed :Number = 0;
     protected var _throbTime :Number = JammyConsts.THROB_TIME_MAX / 2;
     protected var _totalTimeElapsed :Number = 0;
-    protected var _upThrob :Boolean = true;
-    protected var _dispatchedThrob :Boolean = false;
+    protected var _state :ThrobState = ThrobState.IDLE_UP;
 }
 
 class Quadrant extends Enum
