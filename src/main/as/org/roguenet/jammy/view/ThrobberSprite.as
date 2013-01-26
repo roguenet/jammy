@@ -4,8 +4,11 @@ import aspire.geom.Vector2;
 import aspire.util.Log;
 
 import flash.display.BitmapData;
-import flash.display.Shape;
+import flash.display.Sprite;
 import flash.filters.DropShadowFilter;
+import flash.text.TextField;
+import flash.text.TextFormat;
+import flash.text.TextFormatAlign;
 
 import flashbang.objects.SpriteObject;
 
@@ -41,11 +44,21 @@ public class ThrobberSprite extends SpriteObject
 
     protected function buildView () :void
     {
-        var circle :Shape = new Shape();
+        var circle :Sprite = new Sprite();
         circle.graphics.beginFill(_model.color.value);
         circle.graphics.drawCircle(JammyConsts.THROBBER_MAX_RADIUS,
             JammyConsts.THROBBER_MAX_RADIUS, JammyConsts.THROBBER_MAX_RADIUS);
         circle.graphics.endFill();
+        var value :TextField = new TextField();
+        var format :TextFormat = value.defaultTextFormat;
+        format.bold = true;
+        format.size = 50;
+        format.underline = true;
+        value.defaultTextFormat = format;
+        value.text = _model.value.value;
+        value.x = JammyConsts.THROBBER_MAX_RADIUS - 10;
+        value.y = JammyConsts.THROBBER_MAX_RADIUS - 30; // fudge to near the middle
+        circle.addChild(value);
         circle.filters = [ new DropShadowFilter() ];
 
         const shadowBuffer :int = 20;
