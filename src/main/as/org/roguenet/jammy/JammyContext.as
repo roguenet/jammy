@@ -10,7 +10,7 @@ public class JammyContext
     public static const WIDTH :int = 1024;
     public static const HEIGHT :int = 768;
 
-    public static const THROBBER_MAX_RADIUS :int = 150;
+    public static const THROBBER_MAX_RADIUS :int = 70;
     public static const THROBBER_MIN_RADIUS :int = 30;
 
     public static const THROB_TIME_MAX :Number = 3.0;
