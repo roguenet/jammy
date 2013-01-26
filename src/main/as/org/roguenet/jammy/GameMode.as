@@ -23,6 +23,7 @@ public class GameMode extends AppMode
         for (var ii :int = 0; ii < 10; ii++) {
             addThrobber();
         }
+        _regs.addSignalListener(_timer.throbbed, F.callback(growThrobbers));
     }
 
     public function get throb () :Number
@@ -53,11 +54,17 @@ public class GameMode extends AppMode
             log.warning("Unable to add throbber, nowhere to put it");
             return;
         }
-        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, START_RADIUS));
+        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos));
         addObject(sprite, modeSprite);
         addObject(sprite.model);
         _throbbers.add(sprite.model);
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
+    }
+
+    protected function growThrobbers () :void
+    {
+        // wortk with an array copy, as some throbbers may get removed during this process
+        for each (var throbber :Throbber in _throbbers.toArray()) throbber.grow();
     }
 
     protected function randomPos () :Vector2
@@ -154,7 +161,6 @@ public class GameMode extends AppMode
     }
 
     protected static const RAND :Randoms = JammyConsts.RAND;
-    protected static const START_RADIUS :int = JammyConsts.THROBBER_MAX_RADIUS;
     protected static const PLACEMENT_DIST_MIN :Number =
         JammyConsts.THROBBER_MAX_RADIUS * JammyConsts.THROB_MAX + JammyConsts.PLACEMENT_BUFFER;
     protected static const PLACEMENT_BOUNDS :Rectangle =
@@ -178,10 +184,13 @@ import flash.geom.Rectangle;
 
 import flashbang.util.Easing;
 
+import org.osflash.signals.Signal;
 import org.roguenet.jammy.JammyConsts;
 
 class ThrobTimer
 {
+    public const throbbed :Signal = new Signal();
+
     public function get value () :Number
     {
         return _value;
@@ -196,6 +205,9 @@ class ThrobTimer
         // if we've elapsed more than we should in the current half cycle, evolve some values
         if (_throbElapsed > _throbTime) {
             _throbElapsed = _throbElapsed % _throbTime;
+            if (_upThrob) {
+                throbbed.dispatch();
+            }
             _upThrob = !_upThrob;
             _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
                 Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);

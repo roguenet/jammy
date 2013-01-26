@@ -6,19 +6,21 @@ import flash.geom.Rectangle;
 
 import flashbang.GameObject;
 import flashbang.util.Collision;
+import flashbang.util.Easing;
 
 import org.osflash.signals.Signal;
+import org.roguenet.jammy.JammyConsts;
 
 public class Throbber extends GameObject
 {
     public const positionChanged :Signal = new Signal();
     public const radiusChanged :Signal = new Signal();
 
-    public function Throbber (position :Vector2, radius :int,
-        color :ThrobberColor = null, value :ThrobberValue = null)
+    public function Throbber (position :Vector2, color :ThrobberColor = null,
+        value :ThrobberValue = null)
     {
         _pos = position;
-        _radius = radius;
+        grow();
         _color = color == null ? ThrobberColor.random() : color;
         _value = value == null ? ThrobberValue.random() : value;
     }
@@ -50,10 +52,10 @@ public class Throbber extends GameObject
         positionChanged.dispatch(pos);
     }
 
-    public function setRadius (radius :int) :void
+    public function grow () :void
     {
-        _bounds = null;
-        radiusChanged.dispatch(_radius = radius);
+        setRadius(Easing.linear(JammyConsts.THROBBER_MIN_RADIUS, JammyConsts.THROBBER_MAX_RADIUS,
+            ++_level, JammyConsts.THROBBER_LEVELS));
     }
 
     public function getBounds () :Rectangle
@@ -88,10 +90,17 @@ public class Throbber extends GameObject
         return "Throbber [" + _pos + ", " + _radius + ", " + _color + ", " + _value + "]";
     }
 
+    protected function setRadius (radius :int) :void
+    {
+        _bounds = null;
+        radiusChanged.dispatch(_radius = radius);
+    }
+
     protected var _color :ThrobberColor;
     protected var _value :ThrobberValue;
     protected var _pos :Vector2;
     protected var _radius :int;
+    protected var _level :int = -1;
 
     protected var _bounds :Rectangle; // cached
 }
