@@ -1,6 +1,7 @@
 package org.roguenet.jammy {
 
 import aspire.geom.Vector2;
+import aspire.util.F;
 import aspire.util.Log;
 import aspire.util.Randoms;
 import aspire.util.Set;
@@ -20,14 +21,7 @@ public class GameMode extends AppMode
         super.setup();
 
         for (var ii :int = 0; ii < 10; ii++) {
-            var pos :Vector2 = randomPos();
-            if (pos == null) {
-                break;
-            }
-            var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, START_RADIUS));
-            addObject(sprite, modeSprite);
-            addObject(sprite.model);
-            _throbbers.push(sprite.model);
+            addThrobber();
         }
     }
 
@@ -40,6 +34,30 @@ public class GameMode extends AppMode
     {
         _timer.update(dt);
         super.update(dt);
+    }
+
+    protected function touchedThrobber (throbber :Throbber) :void
+    {
+        log.info("touchedThrobber", "throbber", throbber);
+        destroyObject(throbber.ref);
+        if (!_throbbers.remove(throbber)) {
+            log.warning("Throbber was not found in _throbber", "throbber", throbber);
+        }
+        addThrobber();
+    }
+
+    protected function addThrobber () :void
+    {
+        var pos :Vector2 = randomPos();
+        if (pos == null) {
+            log.warning("Unable to add throbber, nowhere to put it");
+            return;
+        }
+        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, START_RADIUS));
+        addObject(sprite, modeSprite);
+        addObject(sprite.model);
+        _throbbers.add(sprite.model);
+        _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
     }
 
     protected function randomPos () :Vector2
@@ -113,17 +131,19 @@ public class GameMode extends AppMode
     protected function getIntersects (pos :Vector2) :Array
     {
         var intersects :Array = [];
-        for each (var throb :Throbber in _throbbers) {
+        _throbbers.forEach(function (throb :Throbber) :Boolean {
             if (throb.contains(pos)) {
                 // try again, this pos can't work
-                return null;
+                intersects = null;
+                return true; // break;
             }
 
             if (throb.intersects(pos, PLACEMENT_DIST_MIN)) {
                 // add to the list of throbbers we currently intersect.
                 intersects.push(throb);
             }
-        }
+            return false; // continue;
+        });
         return intersects;
     }
 
@@ -144,7 +164,7 @@ public class GameMode extends AppMode
             JammyConsts.BOARD_WIDTH - PLACEMENT_DIST_MIN * 2,
             JammyConsts.BOARD_HEIGHT - PLACEMENT_DIST_MIN * 2);
 
-    protected var _throbbers :Array = [];
+    protected var _throbbers :Set = Sets.newSetOf(Throbber);
     protected var _timer :ThrobTimer = new ThrobTimer();
 
     private static const log :Log = Log.getLog(GameMode);
