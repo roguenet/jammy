@@ -4,6 +4,7 @@
     <name>Jammy</name>
     <versionNumber>0.0.1</versionNumber>
     <filename>jammy</filename>
+    <supportedProfiles>mobileDevice</supportedProfiles>
     <initialWindow>
         <renderMode>direct</renderMode>
         <aspectRatio>landscape</aspectRatio>

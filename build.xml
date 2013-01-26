@@ -49,7 +49,7 @@
 
   <target name="test">
     <exec executable="adl">
-      <arg value="${ipa.dir}/jammy-app.xml"/>
+      <arg value="${ipa.dir}/jammy-desktop-app.xml"/>
       <arg value="-screensize"/>
       <arg value="iPad"/>
     </exec>
