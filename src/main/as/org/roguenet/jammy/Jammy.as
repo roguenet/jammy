@@ -14,10 +14,10 @@ public class Jammy extends FlashbangApp
     override protected function createConfig () :Config
     {
         var config :Config = new Config();
-        config.stageWidth = JammyContext.WIDTH;
-        config.stageHeight = JammyContext.HEIGHT;
-        config.windowWidth = JammyContext.WIDTH;
-        config.windowHeight = JammyContext.HEIGHT;
+        config.stageWidth = JammyConsts.WIDTH;
+        config.stageHeight = JammyConsts.HEIGHT;
+        config.windowWidth = JammyConsts.WIDTH;
+        config.windowHeight = JammyConsts.HEIGHT;
         return config;
     }
 }

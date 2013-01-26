@@ -3,7 +3,7 @@ package org.roguenet.jammy.model {
 import aspire.util.Enum;
 import aspire.util.WeightedArray;
 
-import org.roguenet.jammy.JammyContext;
+import org.roguenet.jammy.JammyConsts;
 
 public class ThrobberValue extends Enum
 {
@@ -26,7 +26,7 @@ public class ThrobberValue extends Enum
     public static function random () :ThrobberValue
     {
         if (_weights == null) {
-            _weights = new WeightedArray(JammyContext.RAND);
+            _weights = new WeightedArray(JammyConsts.RAND);
             values().forEach(function (value :ThrobberValue, ...ignored) :void {
                 _weights.push(value, value._weight);
             });

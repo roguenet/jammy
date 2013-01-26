@@ -3,7 +3,7 @@ package org.roguenet.jammy {
 import aspire.util.Random;
 import aspire.util.Randoms;
 
-public class JammyContext
+public class JammyConsts
 {
     public static const RAND :Randoms = new Randoms(Random.create());
 

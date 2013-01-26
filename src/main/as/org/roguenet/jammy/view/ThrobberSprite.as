@@ -10,7 +10,7 @@ import flash.geom.Point;
 import flashbang.objects.SpriteObject;
 
 import org.roguenet.jammy.GameMode;
-import org.roguenet.jammy.JammyContext;
+import org.roguenet.jammy.JammyConsts;
 import org.roguenet.jammy.model.Throbber;
 
 import starling.display.Image;
@@ -43,18 +43,18 @@ public class ThrobberSprite extends SpriteObject
     {
         var circle :Shape = new Shape();
         circle.graphics.beginFill(_model.color.value);
-        circle.graphics.drawCircle(JammyContext.THROBBER_MAX_RADIUS,
-            JammyContext.THROBBER_MAX_RADIUS, JammyContext.THROBBER_MAX_RADIUS);
+        circle.graphics.drawCircle(JammyConsts.THROBBER_MAX_RADIUS,
+            JammyConsts.THROBBER_MAX_RADIUS, JammyConsts.THROBBER_MAX_RADIUS);
         circle.graphics.endFill();
         circle.filters = [ new DropShadowFilter() ];
 
         const shadowBuffer :int = 20;
-        var data :BitmapData = new BitmapData(JammyContext.THROBBER_MAX_RADIUS * 2 + shadowBuffer,
-            JammyContext.THROBBER_MAX_RADIUS * 2 + shadowBuffer, true, 0);
+        var data :BitmapData = new BitmapData(JammyConsts.THROBBER_MAX_RADIUS * 2 + shadowBuffer,
+            JammyConsts.THROBBER_MAX_RADIUS * 2 + shadowBuffer, true, 0);
         data.draw(circle);
         var img :Image = new Image(Texture.fromBitmapData(data));
-        img.x = -JammyContext.THROBBER_MAX_RADIUS - shadowBuffer / 2;
-        img.y = -JammyContext.THROBBER_MAX_RADIUS - shadowBuffer / 2;
+        img.x = -JammyConsts.THROBBER_MAX_RADIUS - shadowBuffer / 2;
+        img.y = -JammyConsts.THROBBER_MAX_RADIUS - shadowBuffer / 2;
         _sprite.addChild(img);
     }
 
@@ -79,7 +79,7 @@ public class ThrobberSprite extends SpriteObject
     protected function updateRadius () :void
     {
         _sprite.scaleX = _sprite.scaleY =
-            GameMode(mode).throb * (_model.radius / JammyContext.THROBBER_MAX_RADIUS);
+            GameMode(mode).throb * (_model.radius / JammyConsts.THROBBER_MAX_RADIUS);
     }
 
     protected var _model :Throbber;

@@ -15,9 +15,10 @@ public class GameMode extends AppMode
 
         for (var ii :int = 0; ii < 10; ii++) {
             var sprite :ThrobberSprite =
-                new ThrobberSprite(new Throbber(randomPos(), randomRadius()));
+                new ThrobberSprite(new Throbber(randomPos(), JammyConsts.THROBBER_MAX_RADIUS));
             addObject(sprite, modeSprite);
             addObject(sprite.model);
+            _models.push(sprite.model);
         }
     }
 
@@ -32,27 +33,20 @@ public class GameMode extends AppMode
         super.update(dt);
     }
 
-    protected static function randomPos () :Point
+    protected function randomPos () :Point
     {
-        return new Point(JammyContext.RAND.getNumber(JammyContext.WIDTH),
-            JammyContext.RAND.getNumber(JammyContext.HEIGHT));
+        return new Point(JammyConsts.RAND.getNumber(JammyConsts.WIDTH),
+            JammyConsts.RAND.getNumber(JammyConsts.HEIGHT));
     }
 
-    protected static function randomRadius () :int
-    {
-        return JammyContext.RAND.getInRange(JammyContext.THROBBER_MIN_RADIUS,
-            JammyContext.THROBBER_MAX_RADIUS);
-    }
-
+    protected var _models :Array = [];
     protected var _timer :ThrobTimer = new ThrobTimer();
 }
 }
 
-import aspire.util.Log;
-
 import flashbang.util.Easing;
 
-import org.roguenet.jammy.JammyContext;
+import org.roguenet.jammy.JammyConsts;
 
 class ThrobTimer
 {
@@ -92,16 +86,16 @@ class ThrobTimer
         }
     }
 
-    protected static const MIN :Number = JammyContext.THROB_MIN;
-    protected static const MAX :Number = JammyContext.THROB_MAX;
-    protected static const THRESHOLD :Number = JammyContext.THROB_TIMING_THRESHOLD;
-    protected static const HALF_TIME_MIN :Number = JammyContext.THROB_TIME_MIN / 2;
-    protected static const HALF_TIME_MAX :Number = JammyContext.THROB_TIME_MAX / 2;
-    protected static const RAMP_UP_TIME :Number = JammyContext.THROB_RAMP_UP_TIME;
+    protected static const MIN :Number = JammyConsts.THROB_MIN;
+    protected static const MAX :Number = JammyConsts.THROB_MAX;
+    protected static const THRESHOLD :Number = JammyConsts.THROB_TIMING_THRESHOLD;
+    protected static const HALF_TIME_MIN :Number = JammyConsts.THROB_TIME_MIN / 2;
+    protected static const HALF_TIME_MAX :Number = JammyConsts.THROB_TIME_MAX / 2;
+    protected static const RAMP_UP_TIME :Number = JammyConsts.THROB_RAMP_UP_TIME;
 
     protected var _value :Number;
     protected var _throbElapsed :Number = 0;
-    protected var _throbTime :Number = JammyContext.THROB_TIME_MAX / 2;
+    protected var _throbTime :Number = JammyConsts.THROB_TIME_MAX / 2;
     protected var _totalTimeElapsed :Number = 0;
     protected var _upThrob :Boolean = true;
 }
