@@ -55,7 +55,7 @@ public class ThrobberSprite extends SpriteObject
         format.size = 50;
         format.underline = true;
         value.defaultTextFormat = format;
-        value.text = _model.value.value;
+        value.text = _model.type.value;
         value.x = JammyConsts.THROBBER_MAX_RADIUS - 10;
         value.y = JammyConsts.THROBBER_MAX_RADIUS - 30; // fudge to near the middle
         circle.addChild(value);
