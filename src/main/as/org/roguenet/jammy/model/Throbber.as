@@ -60,6 +60,11 @@ public class Throbber extends GameObject
         }
     }
 
+    public function getScoreValue () :int
+    {
+        return JammyConsts.THROBBER_LEVELS - _level;
+    }
+
     /**
      * Returns true if our circle contains or intersects the given point.
      */
