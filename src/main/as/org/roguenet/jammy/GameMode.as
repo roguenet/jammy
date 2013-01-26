@@ -6,8 +6,6 @@ import aspire.util.Randoms;
 import aspire.util.Set;
 import aspire.util.Sets;
 
-import flash.display.BitmapData;
-import flash.display.Shape;
 import flash.geom.Rectangle;
 
 import flashbang.AppMode;
@@ -15,27 +13,11 @@ import flashbang.AppMode;
 import org.roguenet.jammy.model.Throbber;
 import org.roguenet.jammy.view.ThrobberSprite;
 
-import starling.display.Image;
-import starling.textures.Texture;
-import starling.utils.Color;
-
 public class GameMode extends AppMode
 {
     override protected function setup () :void
     {
         super.setup();
-
-        var placementBounds :Shape = new Shape();
-        placementBounds.graphics.lineStyle(4, Color.GREEN);
-        placementBounds.graphics.drawRect(2, 2, PLACEMENT_BOUNDS.width, PLACEMENT_BOUNDS.height);
-        var data :BitmapData = new BitmapData(PLACEMENT_BOUNDS.width + 4,
-            PLACEMENT_BOUNDS.height + 4,
-            true, 0);
-        data.draw(placementBounds);
-        var img :Image = new Image(Texture.fromBitmapData(data));
-        img.x = PLACEMENT_BOUNDS.x - 2;
-        img.y = PLACEMENT_BOUNDS.y - 2;
-        modeSprite.addChild(img);
 
         for (var ii :int = 0; ii < 10; ii++) {
             var pos :Vector2 = randomPos();
