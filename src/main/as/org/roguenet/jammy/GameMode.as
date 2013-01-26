@@ -94,7 +94,7 @@ public class GameMode extends AppMode
 
                 // we can tune this to not move the thing so far if this algorithm has too much
                 // trouble finding a placement for a new throbber
-                var grownPos :Vector2 = quad.grow(pos, START_RADIUS + BUFFER);
+                var grownPos :Vector2 = quad.grow(pos, PLACEMENT_DIST_MIN);
                 if (!placementBounds.contains(grownPos.x, grownPos.y)) {
                     // we're too close to a wall
                     break;
@@ -119,7 +119,7 @@ public class GameMode extends AppMode
                 return null;
             }
 
-            if (throb.intersects(pos, START_RADIUS + BUFFER)) {
+            if (throb.intersects(pos, PLACEMENT_DIST_MIN)) {
                 // add to the list of throbbers we currently intersect.
                 intersects.push(throb);
             }
@@ -134,14 +134,15 @@ public class GameMode extends AppMode
     }
 
     protected static const RAND :Randoms = JammyConsts.RAND;
+    protected static const START_RADIUS :int = JammyConsts.THROBBER_MAX_RADIUS;
+    protected static const PLACEMENT_DIST_MIN :Number =
+        JammyConsts.THROBBER_MAX_RADIUS * JammyConsts.THROB_MAX + JammyConsts.PLACEMENT_BUFFER;
     protected static const PLACEMENT_BOUNDS :Rectangle =
         new Rectangle(
-            JammyConsts.BOARD_X + JammyConsts.THROBBER_MAX_RADIUS,
-            JammyConsts.BOARD_Y + JammyConsts.THROBBER_MAX_RADIUS,
-            JammyConsts.BOARD_WIDTH - JammyConsts.THROBBER_MAX_RADIUS * 2,
-            JammyConsts.BOARD_HEIGHT - JammyConsts.THROBBER_MAX_RADIUS * 2);
-    protected static const START_RADIUS :int = JammyConsts.THROBBER_MAX_RADIUS;
-    protected static const BUFFER :int = JammyConsts.PLACEMENT_BUFFER;
+            JammyConsts.BOARD_X + PLACEMENT_DIST_MIN,
+            JammyConsts.BOARD_Y + PLACEMENT_DIST_MIN,
+            JammyConsts.BOARD_WIDTH - PLACEMENT_DIST_MIN * 2,
+            JammyConsts.BOARD_HEIGHT - PLACEMENT_DIST_MIN * 2);
 
     protected var _throbbers :Array = [];
     protected var _timer :ThrobTimer = new ThrobTimer();
