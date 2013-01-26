@@ -1,6 +1,6 @@
 package org.roguenet.jammy {
 
-import flash.geom.Point;
+import aspire.geom.Vector2;
 
 import flashbang.AppMode;
 
@@ -33,9 +33,9 @@ public class GameMode extends AppMode
         super.update(dt);
     }
 
-    protected function randomPos () :Point
+    protected function randomPos () :Vector2
     {
-        return new Point(JammyConsts.RAND.getNumber(JammyConsts.WIDTH),
+        return new Vector2(JammyConsts.RAND.getNumber(JammyConsts.WIDTH),
             JammyConsts.RAND.getNumber(JammyConsts.HEIGHT));
     }
 

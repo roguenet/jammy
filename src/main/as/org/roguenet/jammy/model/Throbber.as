@@ -1,6 +1,7 @@
 package org.roguenet.jammy.model {
 
-import flash.geom.Point;
+import aspire.geom.Vector2;
+
 import flash.geom.Rectangle;
 
 import flashbang.GameObject;
@@ -12,7 +13,7 @@ public class Throbber extends GameObject
     public const positionChanged :Signal = new Signal();
     public const radiusChanged :Signal = new Signal();
 
-    public function Throbber (position :Point, radius :int,
+    public function Throbber (position :Vector2, radius :int,
         color :ThrobberColor = null, value :ThrobberValue = null)
     {
         _pos = position;
@@ -31,7 +32,7 @@ public class Throbber extends GameObject
         return _value;
     }
 
-    public function get position () :Point
+    public function get position () :Vector2
     {
         return _pos;
     }
@@ -41,7 +42,7 @@ public class Throbber extends GameObject
         return _radius;
     }
 
-    public function moveTo (pos :Point) :void
+    public function moveTo (pos :Vector2) :void
     {
         _pos = pos.clone(); // protect against external modification
         _bounds = null;
@@ -72,7 +73,7 @@ public class Throbber extends GameObject
 
     protected var _color :ThrobberColor;
     protected var _value :ThrobberValue;
-    protected var _pos :Point;
+    protected var _pos :Vector2;
     protected var _radius :int;
 
     protected var _bounds :Rectangle; // cached

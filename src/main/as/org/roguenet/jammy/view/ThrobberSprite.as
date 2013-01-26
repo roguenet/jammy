@@ -1,11 +1,11 @@
 package org.roguenet.jammy.view {
 
+import aspire.geom.Vector2;
 import aspire.util.Log;
 
 import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.filters.DropShadowFilter;
-import flash.geom.Point;
 
 import flashbang.objects.SpriteObject;
 
@@ -30,7 +30,7 @@ public class ThrobberSprite extends SpriteObject
 
         _regs.addSignalListener(touchEnded, function (touch :Touch) :void {
             log.info("touched", "throbber", _model, "touch", touch, "spritePos",
-                new Point(_sprite.x, _sprite.y));
+                new Vector2(_sprite.x, _sprite.y));
         });
     }
 
@@ -58,7 +58,7 @@ public class ThrobberSprite extends SpriteObject
         _sprite.addChild(img);
     }
 
-    protected function positionChanged (pos :Point) :void
+    protected function positionChanged (pos :Vector2) :void
     {
         _sprite.x = pos.x;
         _sprite.y = pos.y;
