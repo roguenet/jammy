@@ -1,9 +1,11 @@
 package org.roguenet.jammy {
 
+import flash.geom.Point;
+
 import flashbang.AppMode;
-import flashbang.objects.Button;
-import flashbang.objects.MovieObject;
-import flashbang.objects.SimpleTextButton;
+
+import org.roguenet.jammy.model.Throbber;
+import org.roguenet.jammy.view.ThrobberSprite;
 
 public class GameMode extends AppMode
 {
@@ -11,21 +13,24 @@ public class GameMode extends AppMode
     {
         super.setup();
 
-        var obj :MovieObject = MovieObject.create("flump/walk");
-        obj.display.x = Jammy.WIDTH / 2;
-        obj.display.y = Jammy.HEIGHT / 2;
-        addObject(obj, this.modeSprite);
+        for (var ii :int = 0; ii < 10; ii++) {
+            var sprite :ThrobberSprite =
+                new ThrobberSprite(new Throbber(randomPos(), randomRadius()));
+            addObject(sprite, modeSprite);
+            addObject(sprite.model);
+        }
+    }
 
-        var jammy :MovieObject = MovieObject.create("jammy/triangle_anim");
-        addObject(jammy, this.modeSprite);
+    protected static function randomPos () :Point
+    {
+        return new Point(JammyContext.RAND.getNumber(JammyContext.WIDTH),
+            JammyContext.RAND.getNumber(JammyContext.HEIGHT));
+    }
 
-        var pause :Button = new SimpleTextButton("Pause", 18);
-        pause.display.x = (Jammy.WIDTH - pause.display.width) * 0.5;
-        pause.display.y = Jammy.HEIGHT - pause.display.height - 20;
-        addObject(pause, this.modeSprite);
-        _regs.addSignalListener(pause.clicked, function () :void {
-            viewport.pushMode(new PauseMode());
-        });
+    protected static function randomRadius () :int
+    {
+        return JammyContext.RAND.getInRange(JammyContext.THROBBER_MIN_RADIUS,
+            JammyContext.THROBBER_MAX_RADIUS);
     }
 }
 }

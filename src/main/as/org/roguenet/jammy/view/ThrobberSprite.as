@@ -1,0 +1,77 @@
+package org.roguenet.jammy.view {
+
+import aspire.util.Log;
+
+import flash.display.BitmapData;
+import flash.display.Shape;
+import flash.filters.DropShadowFilter;
+import flash.geom.Point;
+
+import flashbang.objects.SpriteObject;
+
+import org.roguenet.jammy.JammyContext;
+import org.roguenet.jammy.model.Throbber;
+
+import starling.display.Image;
+import starling.events.Touch;
+import starling.textures.Texture;
+
+public class ThrobberSprite extends SpriteObject
+{
+    public function ThrobberSprite (model :Throbber)
+    {
+        _model = model;
+        _model.addDependentObject(this);
+        _regs.addSignalListener(_model.positionChanged, positionChanged);
+        _regs.addSignalListener(_model.radiusChanged, radiusChanged);
+
+        buildView();
+        positionChanged(_model.position);
+        radiusChanged(_model.radius);
+
+        _regs.addSignalListener(touchEnded, function (touch :Touch) :void {
+            log.info("touched", "throbber", _model, "touch", touch, "spritePos",
+                new Point(_sprite.x, _sprite.y));
+        });
+    }
+
+    public function get model () :Throbber
+    {
+        return _model;
+    }
+
+    protected function buildView () :void
+    {
+        var circle :Shape = new Shape();
+        circle.graphics.beginFill(_model.color.value);
+        circle.graphics.drawCircle(JammyContext.THROBBER_MAX_RADIUS,
+            JammyContext.THROBBER_MAX_RADIUS, JammyContext.THROBBER_MAX_RADIUS);
+        circle.graphics.endFill();
+        circle.filters = [ new DropShadowFilter() ];
+
+        const shadowBuffer :int = 20;
+        var data :BitmapData = new BitmapData(JammyContext.THROBBER_MAX_RADIUS * 2 + shadowBuffer,
+            JammyContext.THROBBER_MAX_RADIUS * 2 + shadowBuffer, true, 0);
+        data.draw(circle);
+        var img :Image = new Image(Texture.fromBitmapData(data));
+        img.x = -JammyContext.THROBBER_MAX_RADIUS - shadowBuffer / 2;
+        img.y = -JammyContext.THROBBER_MAX_RADIUS - shadowBuffer / 2;
+        _sprite.addChild(img);
+    }
+
+    protected function positionChanged (pos :Point) :void
+    {
+        _sprite.x = pos.x;
+        _sprite.y = pos.y;
+    }
+
+    protected function radiusChanged (radius :int) :void
+    {
+        _sprite.scaleX = _sprite.scaleY = radius / JammyContext.THROBBER_MAX_RADIUS;
+    }
+
+    protected var _model :Throbber;
+
+    private static const log :Log = Log.getLog(ThrobberSprite);
+}
+}
