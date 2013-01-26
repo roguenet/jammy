@@ -154,13 +154,13 @@ public class GameMode extends AppMode
     {
         var intersects :Array = [];
         _throbbers.forEach(function (throb :Throbber) :Boolean {
-            if (throb.contains(pos)) {
+            if (throb.containsAtMax(pos)) {
                 // try again, this pos can't work
                 intersects = null;
                 return true; // break;
             }
 
-            if (throb.intersects(pos, PLACEMENT_DIST_MIN)) {
+            if (throb.intersectsAtMax(pos, PLACEMENT_DIST_MIN)) {
                 // add to the list of throbbers we currently intersect.
                 intersects.push(throb);
             }

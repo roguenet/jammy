@@ -57,9 +57,7 @@ public class Throbber extends GameObject
         if (++_level == JammyConsts.THROBBER_LEVELS) {
             destroySelf();
         } else {
-            setRadius(Easing.linear(
-                JammyConsts.THROBBER_MIN_RADIUS,  JammyConsts.THROBBER_MAX_RADIUS, _level,
-                JammyConsts.THROBBER_LEVELS - 1));
+            setRadius(Easing.linear(MIN_RADIUS, MAX_RADIUS, _level, LEVELS - 1));
         }
     }
 
@@ -83,11 +81,29 @@ public class Throbber extends GameObject
     }
 
     /**
+     * Returns true if our circle will contain or intersect the given point when we're as big as
+     * we get.
+     */
+    public function containsAtMax (pos :Vector2) :Boolean
+    {
+        return Collision.circlesIntersect(_pos, MAX_RADIUS, pos, 0);
+    }
+
+    /**
      * Returns true if our circle intersects with the provided circle.
      */
     public function intersects (pos :Vector2, radius :int) :Boolean
     {
         return Collision.circlesIntersect(_pos, _radius, pos, radius);
+    }
+
+    /**
+     * Returns true if our circle will intersect with the provided circle when we're as big as we
+     * get.
+     */
+    public function intersectsAtMax (pos :Vector2, radius :int) :Boolean
+    {
+        return Collision.circlesIntersect(_pos, MAX_RADIUS, pos, radius);
     }
 
     override public function toString () :String
@@ -100,6 +116,10 @@ public class Throbber extends GameObject
         _bounds = null;
         radiusChanged.dispatch(_radius = radius);
     }
+
+    protected static const MAX_RADIUS :int = JammyConsts.THROBBER_MAX_RADIUS;
+    protected static const MIN_RADIUS :int = JammyConsts.THROBBER_MIN_RADIUS;
+    protected static const LEVELS :int = JammyConsts.THROBBER_LEVELS;
 
     protected var _color :ThrobberColor;
     protected var _value :ThrobberValue;
