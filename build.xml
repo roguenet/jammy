@@ -2,8 +2,10 @@
 <project name="jammy" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <property name="asrc.dir" location="src/main/as"/>
   <property name="web.dir" location="src/main/web"/>
+  <property name="rsrcs.dir" location="src/main/resources"/>
   <property name="deploy.dir" location="dist"/>
   <property name="pages.dir" location="../jammy-pages"/>
+  <property name="ipa.dir" location="${deploy.dir}/ipa"/>
 
   <property name="ooo-build.vers" value="2.5"/>
   <ant antfile="bootstrap.xml"/>
@@ -11,6 +13,7 @@
 
   <target name="-prepare" depends="-init-ooo">
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.6"/>
+    <mkdir dir="${deploy.dir}"/>
   </target>
 
   <target name="clean" description="Removes all generated files and directories">
@@ -18,7 +21,6 @@
   </target>
 
   <target name="compile" depends="-prepare" description="Builds the swf">
-    <mkdir dir="${deploy.dir}"/>
     <mavendep pom="pom.xml" pathProp="aslib.path"/>
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.5"/>
     <mxmlc srcdir="${asrc.dir}" libpath="${aslib.path}"
@@ -26,6 +28,30 @@
       main="org/roguenet/jammy/Jammy.as">
       <arg value="-swf-version=13"/>
     </mxmlc>
+  </target>
+
+  <target name="compile_air" depends="-prepare">
+    <mkdir dir="${ipa.dir}"/>
+    <mavendep pom="pom.xml" pathProp="aslib.path"/>
+    <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.5"/>
+    <amxmlc srcdir="${asrc.dir}" libpath="${aslib.path}"
+      dest="${ipa.dir}/${ant.project.name}.swf" static-lrsl="true"
+      main="org/roguenet/jammy/Jammy.as" use-network="true" id="jammy">
+      <arg value="-swf-version=13"/>
+    </amxmlc>
+  </target>
+
+  <target name="test_air">
+    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/jammy-app.xml"/>
+    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/Default.png"/>
+    <copy todir="${ipa.dir}/icons">
+      <fileset dir="${rsrcs.dir}/ipa" includes="Icon*.png"/>
+    </copy>
+    <exec executable="adl">
+      <arg value="${ipa.dir}/jammy-app.xml"/>
+      <arg value="-screensize"/>
+      <arg value="iPad"/>
+    </exec>
   </target>
 
   <target name="deploy" depends="compile" description="Build and deploy to jammy-pages">
