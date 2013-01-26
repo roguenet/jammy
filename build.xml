@@ -32,6 +32,12 @@
 
   <target name="compile-air" depends="-prepare">
     <mkdir dir="${ipa.dir}"/>
+    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/jammy-desktop-app.xml"/>
+    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/jammy-mobile-app.xml"/>
+    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/Default.png"/>
+    <copy todir="${ipa.dir}/icons">
+      <fileset dir="${rsrcs.dir}/ipa" includes="Icon*.png"/>
+    </copy>
     <mavendep pom="pom.xml" pathProp="aslib.path"/>
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.5"/>
     <amxmlc srcdir="${asrc.dir}" libpath="${aslib.path}"
@@ -42,11 +48,6 @@
   </target>
 
   <target name="test">
-    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/jammy-app.xml"/>
-    <copy todir="${ipa.dir}" file="${rsrcs.dir}/ipa/Default.png"/>
-    <copy todir="${ipa.dir}/icons">
-      <fileset dir="${rsrcs.dir}/ipa" includes="Icon*.png"/>
-    </copy>
     <exec executable="adl">
       <arg value="${ipa.dir}/jammy-app.xml"/>
       <arg value="-screensize"/>

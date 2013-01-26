@@ -1,11 +1,20 @@
 package org.roguenet.jammy {
 
+import flash.display.StageAlign;
+import flash.events.Event;
+
 import flashbang.Config;
 import flashbang.FlashbangApp;
 
 [SWF(width="1024", height="768", frameRate="60", backgroundColor="#222222")]
 public class Jammy extends FlashbangApp
 {
+    override protected function addedToStage (e :Event) :void
+    {
+        stage.align = StageAlign.TOP_LEFT;
+        super.addedToStage(e);
+    }
+
     override protected function run () :void
     {
         defaultViewport.pushMode(new LoadingMode());
