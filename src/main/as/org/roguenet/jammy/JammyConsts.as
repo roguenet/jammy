@@ -15,7 +15,7 @@ public class JammyConsts
     public static const HEADER_MARGIN :int = 5;
 
     public static const BOARD_X :int = 0;
-    public static const BOARD_Y :int = HEADER_HEIGHT;
+    public static const BOARD_Y :int = 87;
     public static const BOARD_WIDTH :int = WIDTH;
     public static const BOARD_HEIGHT :int = HEIGHT - HEADER_HEIGHT;
 
