@@ -3,6 +3,8 @@ package org.roguenet.jammy {
 import aspire.geom.Vector2;
 import aspire.util.F;
 import aspire.util.Log;
+import aspire.util.Map;
+import aspire.util.Maps;
 import aspire.util.Randoms;
 import aspire.util.Set;
 import aspire.util.Sets;
@@ -11,6 +13,9 @@ import flash.geom.Rectangle;
 
 import flashbang.AppMode;
 import flashbang.GameObjectRef;
+import flashbang.tasks.AlphaTask;
+import flashbang.tasks.FunctionTask;
+import flashbang.tasks.SerialTask;
 
 import org.roguenet.jammy.model.Throbber;
 import org.roguenet.jammy.view.HeaderSprite;
@@ -34,11 +39,6 @@ public class GameMode extends AppMode
         return _timer.value;
     }
 
-    public function get throbState () :ThrobState
-    {
-        return _timer.state;
-    }
-
     override public function update (dt :Number) :void
     {
         _timer.update(dt);
@@ -57,8 +57,17 @@ public class GameMode extends AppMode
 
     protected function touchedThrobber (throbber :Throbber) :void
     {
-        destroyObject(throbber.ref);
-        _header.setPreviousThrobber(throbber);
+        if (_header.previous == null || _header.previous.isCompatible(throbber)) {
+            throbber.destroySelf();
+            _header.setPreviousThrobber(throbber);
+
+        } else {
+            var view :ThrobberSprite = _throbbers.get(throbber);
+            view.showFailure();
+            view.addTask(new SerialTask(
+                new AlphaTask(0, JammyConsts.FADE_TIME),
+                new FunctionTask(throbber.destroySelf)));
+        }
     }
 
     protected function addThrobber () :void
@@ -76,7 +85,7 @@ public class GameMode extends AppMode
         var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos));
         addObject(sprite, modeSprite);
         addObject(sprite.model);
-        _throbbers.add(sprite.model);
+        _throbbers.put(sprite.model, sprite);
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
     }
 
@@ -84,7 +93,7 @@ public class GameMode extends AppMode
     {
         if (newState == ThrobState.UP) {
             // work with an array copy, as some throbbers may get removed during this process
-            for each (var throbber :Throbber in _throbbers.toArray()) throbber.levelUp();
+            for each (var throbber :Throbber in _throbbers.keys()) throbber.levelUp();
             // add new throbbers every throb
             for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
         }
@@ -161,19 +170,17 @@ public class GameMode extends AppMode
     protected function getIntersects (pos :Vector2) :Array
     {
         var intersects :Array = [];
-        _throbbers.forEach(function (throb :Throbber) :Boolean {
+        for each (var throb :Throbber in _throbbers.keys()) {
             if (throb.containsAtMax(pos)) {
                 // try again, this pos can't work
-                intersects = null;
-                return true; // break;
+                return null;
             }
 
             if (throb.intersectsAtMax(pos, PLACEMENT_DIST_MIN)) {
                 // add to the list of throbbers we currently intersect.
                 intersects.push(throb);
             }
-            return false; // continue;
-        });
+        }
         return intersects;
     }
 
@@ -193,7 +200,7 @@ public class GameMode extends AppMode
             JammyConsts.BOARD_WIDTH - PLACEMENT_DIST_MIN * 2,
             JammyConsts.BOARD_HEIGHT - PLACEMENT_DIST_MIN * 2);
 
-    protected var _throbbers :Set = Sets.newSetOf(Throbber);
+    protected var _throbbers :Map = Maps.newMapOf(Throbber);
     protected var _header :HeaderSprite;
     protected var _timer :ThrobTimer = new ThrobTimer();
 
@@ -239,15 +246,10 @@ class ThrobTimer
                 _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
                     Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
             }
-            changeState(newState);
+            throbStateChanged.dispatch(_state = state);
         }
 
         _value = _state.ease(_throbElapsed, _throbTime);
-    }
-
-    protected function changeState (state :ThrobState) :void
-    {
-        throbStateChanged.dispatch(_state = state);
     }
 
     protected static const HALF_TIME_MIN :Number = JammyConsts.THROB_TIME_MIN / 2;

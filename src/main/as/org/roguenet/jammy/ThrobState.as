@@ -41,21 +41,27 @@ public class ThrobState extends Enum
     public function checkState (elapsed :Number, total :Number) :ThrobState
     {
         if (elapsed >= getThreshold(total)) {
-            return next();
+            return next;
         }
         return this;
     }
 
-    public function next () :ThrobState
+    public function get next () :ThrobState
     {
-        var all :Array = values();
-        return all[(ordinal() + 1) % all.length];
+        if (_next == null) {
+            var all :Array = values();
+            _next = all[(ordinal() + 1) % all.length];
+        }
+        return _next;
     }
 
-    public function prev() :ThrobState
+    public function get prev () :ThrobState
     {
-        var all :Array = values();
-        return all[(ordinal() - 1 + all.length) % all.length];
+        if (_prev == null) {
+            var all :Array = values();
+            _prev = all[(ordinal() - 1 + all.length) % all.length];
+        }
+        return _prev;
     }
 
     public function isUp () :Boolean
@@ -80,7 +86,7 @@ public class ThrobState extends Enum
         }
 
         if (this == UP) {
-            var threshold :Number = prev().getThreshold(total);
+            var threshold :Number = prev.getThreshold(total);
             return Easing.easeIn(JammyConsts.THROB_MIN, JammyConsts.THROB_MAX,
                 elapsed - threshold, total - threshold);
         } else {
@@ -96,5 +102,7 @@ public class ThrobState extends Enum
     }
 
     protected var _thresholdFn :Function;
+    protected var _next :ThrobState;
+    protected var _prev :ThrobState;
 }
 }

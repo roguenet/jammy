@@ -44,6 +44,11 @@ public class Throbber extends GameObject
         return _radius;
     }
 
+    public function isCompatible (other :Throbber) :Boolean
+    {
+        return type.next == other.type || type.prev == other.type;
+    }
+
     public function moveTo (pos :Vector2) :void
     {
         _pos = pos.clone(); // protect against external modification

@@ -45,6 +45,24 @@ public class ThrobberType extends Enum
         return _value;
     }
 
+    public function get next () :ThrobberType
+    {
+        if (_next == null) {
+            var all :Array = values();
+            _next = all[(ordinal() + 1) % all.length];
+        }
+        return _next;
+    }
+
+    public function get prev () :ThrobberType
+    {
+        if (_prev == null) {
+            var all :Array = values();
+            _prev = all[(ordinal() - 1 + all.length) % all.length];
+        }
+        return _prev;
+    }
+
     public function ThrobberType (name :String, value :String, weight :int = 1)
     {
         super(name);
@@ -54,6 +72,8 @@ public class ThrobberType extends Enum
 
     protected var _value :String;
     protected var _weight :int;
+    protected var _next :ThrobberType;
+    protected var _prev :ThrobberType;
 
     protected static var _weights :WeightedArray;
 }
