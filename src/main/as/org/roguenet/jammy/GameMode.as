@@ -28,9 +28,17 @@ import org.roguenet.jammy.view.ThrobberSprite;
 
 public class GameMode extends AppMode
 {
-    override protected function setup () :void
+    override protected function enter () :void
     {
-        super.setup();
+        if (_board != null) {
+            _board.destroySelf();
+            _header.destroySelf();
+            _boardBackground.destroySelf();
+        }
+
+        _totalTime = 0;
+        _throbbers = Maps.newMapOf(Throbber);
+        _timer = new ThrobTimer();
 
         // header on top so its previous throbber sprite can overhang the board
         addObject(_board = new SpriteObject(), modeSprite);
@@ -44,6 +52,7 @@ public class GameMode extends AppMode
         }
         _regs.addSignalListener(_timer.throbStateChanged, throbStateChanged);
 
+        _youSuckTokens = [];
         for (ii = 0; ii < JammyConsts.THROBBER_LEVELS - 1; ii++) {
             _youSuckTokens.push(0);
         }
@@ -142,11 +151,6 @@ public class GameMode extends AppMode
 
     protected function throbStateChanged (newState :ThrobState) :void
     {
-        var actions :Array = _stateActions.remove(newState);
-        if (actions != null) {
-            for each (var action :Function in actions) action();
-        }
-
         if (newState == ThrobState.UP) {
             for each (var throbber :Throbber in _throbbers.keys()) {
                 throbber.levelUp();
@@ -162,15 +166,6 @@ public class GameMode extends AppMode
             updateFastMode();
             Flashbang.audio.playSoundNamed("pulse");
         }
-    }
-
-    protected function addStateAction (state :ThrobState, action :Function) :void
-    {
-        var actions :Array = _stateActions.get(state);
-        if (actions == null) {
-            _stateActions.put(state, actions = []);
-        }
-        actions.push(action);
     }
 
     protected function updateFastMode () :void
@@ -292,12 +287,11 @@ public class GameMode extends AppMode
             JammyConsts.BOARD_WIDTH - PLACEMENT_DIST_MIN * 2,
             JammyConsts.BOARD_HEIGHT - PLACEMENT_DIST_MIN * 2);
 
-    protected var _throbbers :Map = Maps.newMapOf(Throbber);
+    protected var _throbbers :Map;
     protected var _header :HeaderSprite;
     protected var _boardBackground :BoardBackgroundSprite;
     protected var _board :SpriteObject;
-    protected var _timer :ThrobTimer = new ThrobTimer();
-    protected var _stateActions :Map = Maps.newMapOf(ThrobState);
+    protected var _timer :ThrobTimer;
     // if the player clears a piece by hitting one out of order, he gets a you suck token for
     // LEVELS number of turns. These tokens can prevent the user from getting into fast mode.
     protected var _youSuckTokens :Array = [];
