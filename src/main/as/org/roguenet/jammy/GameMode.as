@@ -25,6 +25,8 @@ import org.roguenet.jammy.view.BoardBackgroundSprite;
 import org.roguenet.jammy.view.HeaderSprite;
 import org.roguenet.jammy.view.ThrobberSprite;
 
+import starling.display.Quad;
+
 public class GameMode extends AppMode
 {
     override protected function enter () :void
@@ -78,7 +80,12 @@ public class GameMode extends AppMode
         _header.updateTimer(_totalTime += dt);
         if (_totalTime >= JammyConsts.ROUND_TIME) {
             Flashbang.audio.playSoundNamed("gameOver");
-            viewport.pushMode(new MenuMode(this));
+
+            // have to set up the quad here because we want it under the header
+            var quad :Quad = new Quad(JammyConsts.WIDTH, JammyConsts.HEIGHT, 0);
+            quad.alpha = 0.5;
+            modeSprite.addChildAt(quad, modeSprite.getChildIndex(_header.sprite));
+            viewport.pushMode(new GameOverMode(this));
         }
     }
 
