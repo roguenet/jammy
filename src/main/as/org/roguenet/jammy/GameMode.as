@@ -48,8 +48,12 @@ public class GameMode extends AppMode
         addObject(_boardBackground = new BoardBackgroundSprite(), _board.sprite);
         _regs.addSignalListener(_boardBackground.touchEnded,
             F.callback(Flashbang.audio.playSoundNamed, "noCardTap"));
+        var initialType :ThrobberType = RAND.pick(_header.previous.type.getCompatible());
+        var types :Array = [ initialType ];
         for (var ii :int = 0; ii < JammyConsts.INITIAL_THROBBER_COUNT; ii++) {
-            addThrobber();
+            var throbber :Throbber = addThrobber(types, initialType);
+            types.push(throbber.type);
+            initialType = null;
         }
         _regs.addSignalListener(_timer.throbStateChanged, throbStateChanged);
 
@@ -131,7 +135,8 @@ public class GameMode extends AppMode
             new FunctionTask(view.model.destroySelf)));
     }
 
-    protected function addThrobber (excludeTypes :Array = null) :Throbber
+    protected function addThrobber (excludeTypes :Array = null,
+        forceType :ThrobberType = null) :Throbber
     {
         if (_throbbers.size() >= JammyConsts.THROBBER_COUNT_MAX) {
             log.error("Already at max throbber count, not adding more");
@@ -144,12 +149,14 @@ public class GameMode extends AppMode
             return null;
         }
 
-        var type :ThrobberType;
-        if (_roundsWithoutMatch >= JammyConsts.ROUNDS_TO_FORCE_MATCH) {
-            _roundsWithoutMatch = 0;
-            type = RAND.pick(_header.previous.type.getCompatible());
-        } else {
-            type = randomType(excludeTypes);
+        var type :ThrobberType = forceType;
+        if (type == null) {
+            if (_roundsWithoutMatch >= JammyConsts.ROUNDS_TO_FORCE_MATCH) {
+                _roundsWithoutMatch = 0;
+                type = RAND.pick(_header.previous.type.getCompatible());
+            } else {
+                type = randomType(excludeTypes);
+            }
         }
         var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, type));
         addObject(sprite, _board.sprite);

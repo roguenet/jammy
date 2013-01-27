@@ -9,6 +9,7 @@ import flashbang.resource.ImageResource;
 
 import org.roguenet.jammy.JammyConsts;
 import org.roguenet.jammy.model.Throbber;
+import org.roguenet.jammy.model.ThrobberType;
 
 import starling.text.TextField;
 
@@ -31,16 +32,7 @@ public class HeaderSprite extends SpriteObject
 
     public function setPreviousThrobber (throbber :Throbber, bonusScore :int) :void
     {
-        if (_prevThrob != null) {
-            _prevThrob.model.destroySelf();
-        }
-
-        _prevThrob = new StaticThrobberSprite(
-            new Throbber(PREV_THROB_POS.clone(), throbber.type));
-        _prevThrob.display.scaleX = _prevThrob.display.scaleY = 0.85;
-        addDependentObject(_prevThrob, _sprite);
-        addDependentObject(_prevThrob.model);
-
+        setPrevious(throbber.type);
         setScore(_score + throbber.getScoreValue() + bonusScore);
     }
 
@@ -74,6 +66,17 @@ public class HeaderSprite extends SpriteObject
         addDependentObject(_timer = new TimerBar(), _sprite);
         _timer.sprite.x = 28;
         _timer.sprite.y = 20;
+
+        setPrevious(JammyConsts.RAND.pick(ThrobberType.values()));
+    }
+
+    protected function setPrevious (type :ThrobberType) :void
+    {
+        _prevThrob = new StaticThrobberSprite(
+            new Throbber(PREV_THROB_POS.clone(), type));
+        _prevThrob.display.scaleX = _prevThrob.display.scaleY = 0.85;
+        addDependentObject(_prevThrob, _sprite);
+        addDependentObject(_prevThrob.model);
     }
 
     protected function setScore (score :int) :void
