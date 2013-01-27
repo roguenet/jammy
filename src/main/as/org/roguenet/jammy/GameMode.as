@@ -350,6 +350,8 @@ class ThrobTimer
         _stateElapsed += dt;
         _modeTimeElapsed += dt;
 
+        _throbTime = Easing.linear(_prevModeTime, _fast ? HALF_TIME_FAST : HALF_TIME_BASE,
+            Math.min(_modeTimeElapsed, _rampUpTime), _rampUpTime);
         changeState(_state.checkState(_stateElapsed, _state.stateTime(_throbTime)));
         // our state may have changed, recalculate the state time.
         _value = _state.ease(_stateElapsed, _state.stateTime(_throbTime));
@@ -363,11 +365,6 @@ class ThrobTimer
 
         var stateTime :Number = _state.stateTime(_throbTime);
         _stateElapsed = _stateElapsed > stateTime ? _stateElapsed % stateTime : 0;
-        if (newState.isUp() != _state.isUp()) {
-            _throbTime = Easing.linear(_prevModeTime,
-                _fast ? HALF_TIME_FAST : HALF_TIME_BASE,
-                Math.min(_modeTimeElapsed, _rampUpTime), _rampUpTime);
-        }
         throbStateChanged.dispatch(_state = newState);
     }
 
