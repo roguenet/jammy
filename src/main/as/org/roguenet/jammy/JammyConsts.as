@@ -25,15 +25,17 @@ public class JammyConsts
     public static const THROBBER_MAX_RADIUS :int = 60;
     public static const THROBBER_MIN_RADIUS :int = 25;
 
-    public static const THROB_TIME_MAX :Number = 2.0;
-    public static const THROB_TIME_MIN :Number = THROB_TIME_MAX; // no time changes right now
+    public static const THROB_TIME_MAX :Number = 3.5;
+    public static const THROB_TIME_MIN :Number = 2.0;
     public static const THROB_TIMING_THRESHOLD :Number = 0.6;
-    public static const THROB_RAMP_UP_TIME :Number = 15.0;
+    public static const THROB_RAMP_UP_TIME :Number = 30.0;
 
     public static const THROB_MIN :Number = 1;
     public static const THROB_MAX :Number = 1.15;
 
     public static const THROBBER_COUNT_MAX :int = 12;
+    public static const FAST_MODE_DISCOUNT :Number = 1.0;
+    public static const FAST_MODE_THRESHOLD :Number = THROBBER_COUNT_MAX - 2;
 
     public static const THROBBER_LEVELS :int = 6;
 

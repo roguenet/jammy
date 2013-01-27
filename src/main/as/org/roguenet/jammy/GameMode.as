@@ -40,6 +40,12 @@ public class GameMode extends AppMode
             addThrobber();
         }
         _regs.addSignalListener(_timer.throbStateChanged, throbStateChanged);
+
+        for (ii = 0; ii < JammyConsts.THROBBER_LEVELS - 1; ii++) {
+            _youSuckTokens.push(0);
+        }
+        _youSuckTokens.push(
+            JammyConsts.FAST_MODE_THRESHOLD - JammyConsts.INITIAL_THROBBER_COUNT);
     }
 
     public function get throb () :Number
@@ -75,6 +81,7 @@ public class GameMode extends AppMode
             view.showFailure();
             removeThrobber(view);
             Flashbang.audio.playSoundNamed("wrongCard");
+            youSuck();
         }
     }
 
@@ -139,6 +146,11 @@ public class GameMode extends AppMode
                 }
             }
 
+            _youSuckTokens.shift();
+            _youSuckTokens.push(0);
+            _timer.setFastMode(
+                _throbbers.size() + youSuckValue() < JammyConsts.FAST_MODE_THRESHOLD);
+
         } else if (newState == ThrobState.DOWN) {
             for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
             Flashbang.audio.playSoundNamed("pulse");
@@ -152,6 +164,18 @@ public class GameMode extends AppMode
             _stateActions.put(state, actions = []);
         }
         actions.push(action);
+    }
+
+    protected function youSuckValue () :int
+    {
+        var count :int = 0;
+        for each (var value :int in _youSuckTokens) count += value;
+        return count;
+    }
+
+    protected function youSuck () :void
+    {
+        _youSuckTokens[_youSuckTokens.length - 1]++;
     }
 
     protected function randomPos () :Vector2
@@ -260,6 +284,9 @@ public class GameMode extends AppMode
     protected var _board :BoardSprite;
     protected var _timer :ThrobTimer = new ThrobTimer();
     protected var _stateActions :Map = Maps.newMapOf(ThrobState);
+    // if the player clears a piece by hitting one out of order, he gets a you suck token for
+    // LEVELS number of turns. These tokens can prevent the user from getting into fast mode.
+    protected var _youSuckTokens :Array = [];
 
     private static const log :Log = Log.getLog(GameMode);
 }
@@ -290,6 +317,11 @@ class ThrobTimer
         return _state;
     }
 
+    public function setFastMode (fast :Boolean) :void
+    {
+        _fast = fast;
+    }
+
     public function update (dt :Number) :void
     {
         // update tracking values.
@@ -311,13 +343,18 @@ class ThrobTimer
         _stateElapsed = _stateElapsed > stateTime ? _stateElapsed % stateTime : 0;
         if (newState.isUp() != _state.isUp()) {
             _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
-                Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
+                Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME) -
+                // flat discount for fast players
+                (_fast ? HALF_FAST_DISCOUNT : 0);
+            aspire.util.Log.getLog(ThrobTimer).info("Updated throb time", "time", _throbTime,
+                "fast", _fast);
         }
         throbStateChanged.dispatch(_state = newState);
     }
 
     protected static const HALF_TIME_MIN :Number = JammyConsts.THROB_TIME_MIN / 2;
     protected static const HALF_TIME_MAX :Number = JammyConsts.THROB_TIME_MAX / 2;
+    protected static const HALF_FAST_DISCOUNT :Number = JammyConsts.FAST_MODE_DISCOUNT / 2;
     protected static const RAMP_UP_TIME :Number = JammyConsts.THROB_RAMP_UP_TIME;
 
     protected var _value :Number;
@@ -325,6 +362,7 @@ class ThrobTimer
     protected var _throbTime :Number = JammyConsts.THROB_TIME_MAX / 2;
     protected var _totalTimeElapsed :Number = 0;
     protected var _state :ThrobState = ThrobState.IDLE_UP;
+    protected var _fast :Boolean = false;
 }
 
 class Quadrant extends Enum
