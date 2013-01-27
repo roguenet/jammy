@@ -29,6 +29,7 @@ public class JammyConsts
     public static const THROB_TIME_MIN :Number = THROB_TIME_MAX; // no time changes right now
     public static const THROB_TIMING_THRESHOLD :Number = 0.6;
     public static const THROB_RAMP_UP_TIME :Number = 15.0;
+
     public static const THROB_MIN :Number = 1;
     public static const THROB_MAX :Number = 1.15;
 

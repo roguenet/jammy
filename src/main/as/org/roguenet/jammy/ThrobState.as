@@ -6,26 +6,10 @@ import flashbang.util.Easing;
 
 public class ThrobState extends Enum
 {
-    public static const IDLE_UP :ThrobState = new ThrobState("IDLE_UP",
-        function (total :Number) :Number {
-            return total * JammyConsts.THROB_TIMING_THRESHOLD;
-        }
-    );
-    public static const UP :ThrobState = new ThrobState("UP",
-        function (total :Number) :Number {
-            return total;
-        }
-    );
-    public static const DOWN :ThrobState = new ThrobState("DOWN",
-        function (total :Number) :Number {
-            return total * (1 - JammyConsts.THROB_TIMING_THRESHOLD);
-        }
-    );
-    public static const IDLE_DOWN :ThrobState = new ThrobState("IDLE_DOWN",
-        function (total :Number) :Number {
-            return total;
-        }
-    );
+    public static const IDLE_UP :ThrobState = new ThrobState("IDLE_UP");
+    public static const UP :ThrobState = new ThrobState("UP");
+    public static const DOWN :ThrobState = new ThrobState("DOWN");
+    public static const IDLE_DOWN :ThrobState = new ThrobState("IDLE_DOWN");
     finishedEnumerating(ThrobState);
 
     public static function values () :Array
@@ -40,7 +24,7 @@ public class ThrobState extends Enum
 
     public function checkState (elapsed :Number, total :Number) :ThrobState
     {
-        if (elapsed >= getThreshold(total)) {
+        if (elapsed >= total) {
             return next;
         }
         return this;
@@ -74,11 +58,6 @@ public class ThrobState extends Enum
         return this == UP || this == DOWN;
     }
 
-    public function getThreshold (total :Number) :Number
-    {
-        return _thresholdFn(total);
-    }
-
     public function ease (elapsed :Number, total :Number) :Number
     {
         if (!isThrobbing()) {
@@ -86,22 +65,24 @@ public class ThrobState extends Enum
         }
 
         if (this == UP) {
-            var threshold :Number = prev.getThreshold(total);
-            return Easing.easeIn(JammyConsts.THROB_MIN, JammyConsts.THROB_MAX,
-                elapsed - threshold, total - threshold);
+            return Easing.easeIn(JammyConsts.THROB_MIN, JammyConsts.THROB_MAX, elapsed, total);
         } else {
-            return Easing.easeOut(JammyConsts.THROB_MAX, JammyConsts.THROB_MIN,
-                elapsed, getThreshold(total));
+            return Easing.easeOut(JammyConsts.THROB_MAX, JammyConsts.THROB_MIN, elapsed, total);
         }
     }
 
-    public function ThrobState (name :String, thresholdFn :Function)
+    public function stateTime (halfCycleTime :Number) :Number
     {
-        super(name);
-        _thresholdFn = thresholdFn;
+        return isThrobbing() ?
+            halfCycleTime * (1 - JammyConsts.THROB_TIMING_THRESHOLD) :
+            halfCycleTime * JammyConsts.THROB_TIMING_THRESHOLD;
     }
 
-    protected var _thresholdFn :Function;
+    public function ThrobState (name :String)
+    {
+        super(name);
+    }
+
     protected var _next :ThrobState;
     protected var _prev :ThrobState;
 }

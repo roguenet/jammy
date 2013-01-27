@@ -241,20 +241,27 @@ class ThrobTimer
     public function update (dt :Number) :void
     {
         // update tracking values.
-        _throbElapsed += dt;
+        _stateElapsed += dt;
         _totalTimeElapsed += dt;
 
-        var newState :ThrobState = _state.checkState(_throbElapsed, _throbTime);
-        if (newState != _state) {
-            if (newState.isUp() != _state.isUp()) {
-                _throbElapsed = _throbElapsed % _throbTime;
-                _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
-                    Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
-            }
-            throbStateChanged.dispatch(_state = newState);
+        changeState(_state.checkState(_stateElapsed, _state.stateTime(_throbTime)));
+        // our state may have changed, recalculate the state time.
+        _value = _state.ease(_stateElapsed, _state.stateTime(_throbTime));
+    }
+
+    public function changeState (newState :ThrobState) :void
+    {
+        if (newState == _state) {
+            return; // short-circuit the NOOP
         }
 
-        _value = _state.ease(_throbElapsed, _throbTime);
+        var stateTime :Number = _state.stateTime(_throbTime);
+        _stateElapsed = _stateElapsed > stateTime ? _stateElapsed % stateTime : 0;
+        if (newState.isUp() != _state.isUp()) {
+            _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
+                Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
+        }
+        throbStateChanged.dispatch(_state = newState);
     }
 
     protected static const HALF_TIME_MIN :Number = JammyConsts.THROB_TIME_MIN / 2;
@@ -262,7 +269,7 @@ class ThrobTimer
     protected static const RAMP_UP_TIME :Number = JammyConsts.THROB_RAMP_UP_TIME;
 
     protected var _value :Number;
-    protected var _throbElapsed :Number = 0;
+    protected var _stateElapsed :Number = 0;
     protected var _throbTime :Number = JammyConsts.THROB_TIME_MAX / 2;
     protected var _totalTimeElapsed :Number = 0;
     protected var _state :ThrobState = ThrobState.IDLE_UP;
