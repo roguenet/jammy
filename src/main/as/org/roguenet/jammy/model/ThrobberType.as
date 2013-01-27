@@ -68,6 +68,16 @@ public class ThrobberType extends Enum
         return _prev;
     }
 
+    public function isCompatible (other :ThrobberType) :Boolean
+    {
+        return next == other || prev == other;
+    }
+
+    public function getCompatible () :Array
+    {
+        return [ next, prev ];
+    }
+
     public function ThrobberType (name :String, value :String, weight :int = 1)
     {
         super(name);

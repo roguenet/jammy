@@ -44,7 +44,7 @@ public class Throbber extends GameObject
 
     public function isCompatible (other :Throbber) :Boolean
     {
-        return type.next == other.type || type.prev == other.type;
+        return type.isCompatible(other.type);
     }
 
     public function moveTo (pos :Vector2) :void

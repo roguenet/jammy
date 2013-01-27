@@ -144,7 +144,13 @@ public class GameMode extends AppMode
             return null;
         }
 
-        var type :ThrobberType = randomType(excludeTypes);
+        var type :ThrobberType;
+        if (_roundsWithoutMatch >= JammyConsts.ROUNDS_TO_FORCE_MATCH) {
+            _roundsWithoutMatch = 0;
+            type = RAND.pick(_header.previous.type.getCompatible());
+        } else {
+            type = randomType(excludeTypes);
+        }
         var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, type));
         addObject(sprite, _board.sprite);
         addObject(sprite.model);
@@ -192,6 +198,12 @@ public class GameMode extends AppMode
 
         } else if (newState == ThrobState.DOWN) {
             var types :Array = [];
+            if (_header.previous == null || boardHasMatch(_header.previous.type)) {
+                _roundsWithoutMatch = 0;
+            } else {
+                _roundsWithoutMatch++;
+            }
+
             for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) {
                 throbber = addThrobber(types);
                 if (throbber != null) {
@@ -203,6 +215,16 @@ public class GameMode extends AppMode
             updateFastMode();
             Flashbang.audio.playSoundNamed("pulse");
         }
+    }
+
+    protected function boardHasMatch (type :ThrobberType) :Boolean
+    {
+        for each (var throbber :Throbber in _throbbers.keys()) {
+            if (throbber.type.isCompatible(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function updateFastMode () :void
@@ -334,6 +356,7 @@ public class GameMode extends AppMode
     protected var _youSuckTokens :Array = [];
     protected var _totalTime :Number = 0;
     protected var _currentFastBonus :int = 0;
+    protected var _roundsWithoutMatch :int = 0;
 
     private static const log :Log = Log.getLog(GameMode);
 }

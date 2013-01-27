@@ -55,6 +55,8 @@ public class JammyConsts
     public static const ROUND_TIME :int = 60.0;
     public static const TIMER_BEEPS_PER_ROUND :int = 5;
 
+    public static const ROUNDS_TO_FORCE_MATCH :int = 3;
+
     public static const GAME_OVER_DELAY :Number = 3.0;
 }
 }
