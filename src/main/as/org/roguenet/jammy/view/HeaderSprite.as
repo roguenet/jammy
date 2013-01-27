@@ -29,7 +29,7 @@ public class HeaderSprite extends SpriteObject
         return _prevThrob == null ? null : _prevThrob.model;
     }
 
-    public function setPreviousThrobber (throbber :Throbber) :void
+    public function setPreviousThrobber (throbber :Throbber, bonusScore :int) :void
     {
         if (_prevThrob != null) {
             _prevThrob.model.destroySelf();
@@ -41,7 +41,7 @@ public class HeaderSprite extends SpriteObject
         addDependentObject(_prevThrob, _sprite);
         addDependentObject(_prevThrob.model);
 
-        setScore(_score + throbber.getScoreValue());
+        setScore(_score + throbber.getScoreValue() + bonusScore);
     }
 
     public function updateTimer (time :Number) :void
@@ -66,7 +66,7 @@ public class HeaderSprite extends SpriteObject
 
         _scoreField = new TextField(400, 60, "", "Verdana", 36, 0xC60511, true);
         setScore(0);
-        _scoreField.hAlign = "center"
+        _scoreField.hAlign = "center";
         _scoreField.x = JammyConsts.HEADER_WIDTH - _scoreField.width - 20;
         _scoreField.y = 10;
         addDependentObject(new SceneObject(_scoreField), _sprite);

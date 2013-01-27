@@ -96,7 +96,13 @@ public class GameMode extends AppMode
     {
         if (_header.previous == null || _header.previous.isCompatible(throbber)) {
             throbber.destroySelf();
-            _header.setPreviousThrobber(throbber);
+            var bonus :int = 0;
+            if (_timer.fast) {
+                bonus = (_currentFastBonus += JammyConsts.FAST_MODE_SCORE_BONUS);
+            } else {
+                _currentFastBonus = 0;
+            }
+            _header.setPreviousThrobber(throbber, bonus);
             Flashbang.audio.playSoundNamed("cardTap");
             updateFastMode();
 
@@ -106,6 +112,7 @@ public class GameMode extends AppMode
             removeThrobber(view);
             Flashbang.audio.playSoundNamed("wrongCard");
             youSuck();
+            _currentFastBonus = 0;
         }
     }
 
@@ -319,6 +326,7 @@ public class GameMode extends AppMode
     // LEVELS number of turns. These tokens can prevent the user from getting into fast mode.
     protected var _youSuckTokens :Array = [];
     protected var _totalTime :Number = 0;
+    protected var _currentFastBonus :int = 0;
 
     private static const log :Log = Log.getLog(GameMode);
 }
@@ -347,6 +355,11 @@ class ThrobTimer
     public function get state () :ThrobState
     {
         return _state;
+    }
+
+    public function get fast () :Boolean
+    {
+        return _fast;
     }
 
     public function setFastMode (fast :Boolean) :void
