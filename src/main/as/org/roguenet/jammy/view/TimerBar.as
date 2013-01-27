@@ -11,11 +11,16 @@ public class TimerBar extends RenderedSprite
 {
     public function TimerBar ()
     {
-        var shape :Shape = new Shape();
-        shape.graphics.beginFill(Color.GREEN);
-        shape.graphics.drawRect(0, 0, JammyConsts.TIMERBAR_WIDTH, JammyConsts.TIMERBAR_HEIGHT);
-        shape.graphics.endFill();
-        _bar = render(shape);
+        var outline :Shape = new Shape();
+        outline.graphics.lineStyle(2, Color.BLACK);
+        outline.graphics.drawRect(0, 0, JammyConsts.TIMERBAR_WIDTH, JammyConsts.TIMERBAR_HEIGHT);
+        render(outline);
+
+        var bar :Shape = new Shape();
+        bar.graphics.beginFill(Color.GREEN);
+        bar.graphics.drawRect(0, 0, JammyConsts.TIMERBAR_WIDTH, JammyConsts.TIMERBAR_HEIGHT);
+        bar.graphics.endFill();
+        _bar = render(bar);
     }
 
     public function setPercent (value :Number) :void
