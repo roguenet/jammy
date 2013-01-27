@@ -60,6 +60,14 @@ public class GameMode extends AppMode
             JammyConsts.FAST_MODE_THRESHOLD - JammyConsts.INITIAL_THROBBER_COUNT);
     }
 
+    /**
+     * Returns -1 if this GameMode has never gone through a game
+     */
+    public function get score () :int
+    {
+        return _header == null ? -1 : _header.score;
+    }
+
     public function get throb () :Number
     {
         return _timer.value;
@@ -72,7 +80,7 @@ public class GameMode extends AppMode
 
         _header.updateTimer(_totalTime += dt);
         if (_totalTime >= JammyConsts.ROUND_TIME) {
-            viewport.pushMode(new MenuMode());
+            viewport.pushMode(new MenuMode(this));
         }
     }
 

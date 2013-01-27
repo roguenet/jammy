@@ -19,6 +19,11 @@ public class HeaderSprite extends RenderedSprite
         buildView();
     }
 
+    public function get score () :int
+    {
+        return _score;
+    }
+
     public function get previous () :Throbber
     {
         return _prevThrob == null ? null : _prevThrob.model;

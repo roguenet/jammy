@@ -17,8 +17,9 @@ public class LoadingMode extends AppMode
         SoundResources.addSounds(resources);
         resources.load(function () :void {
                 // resources loaded. kick off the game.
-                viewport.changeMode(new GameMode());
-                viewport.pushMode(new MenuMode());
+                var game :GameMode = new GameMode();
+                viewport.changeMode(game);
+                viewport.pushMode(new MenuMode(game));
             }, function (e :Error) :void {
                 // there was a load error
                 log.error("Error loading resources", e);
