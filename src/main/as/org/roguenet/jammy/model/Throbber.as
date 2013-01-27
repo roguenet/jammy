@@ -61,7 +61,7 @@ public class Throbber extends GameObject
 
     public function getScoreValue () :int
     {
-        return JammyConsts.THROBBER_LEVELS - _level;
+        return JammyConsts.BASE_SCORE * (JammyConsts.THROBBER_LEVELS - _level);
     }
 
     /**

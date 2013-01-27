@@ -81,7 +81,8 @@ public class HeaderSprite extends SpriteObject
 
     protected function setScore (score :int) :void
     {
-        _scoreField.text = "SCORE: " + (_score = score);
+        replaceNamedTask("score", new ScoreTask(score, _score, _scoreField));
+        _score = score;
     }
 
     protected static const PREV_THROB_POS :Vector2 = new Vector2(JammyConsts.HEADER_WIDTH / 2 + 7,
@@ -93,4 +94,34 @@ public class HeaderSprite extends SpriteObject
     protected var _timer :TimerBar;
     protected var _beepsToPlay :int = JammyConsts.TIMER_BEEPS_PER_ROUND;
 }
+}
+
+import flashbang.GameObject;
+import flashbang.tasks.InterpolatingTask;
+import flashbang.util.Easing;
+
+import org.roguenet.jammy.JammyConsts;
+
+import starling.text.TextField;
+
+class ScoreTask extends InterpolatingTask
+{
+    public function ScoreTask (score :int, from :int, field :TextField)
+    {
+        super(JammyConsts.FADE_TIME, Easing.easeInOut);
+        _to = score;
+        _from = from;
+        _field = field;
+    }
+
+    override public function update (dt :Number, obj :GameObject) :Boolean
+    {
+        _elapsedTime += dt;
+        _field.text = "SCORE: " + int(interpolate(_from, _to));
+        return (_elapsedTime >= _totalTime);
+    }
+
+    protected var _to :int;
+    protected var _from :int;
+    protected var _field :TextField;
 }

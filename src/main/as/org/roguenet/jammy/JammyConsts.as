@@ -42,6 +42,7 @@ public class JammyConsts
     public static const FAST_MODE_THRESHOLD :Number = THROBBER_COUNT_MAX - 2;
 
     public static const THROBBER_LEVELS :int = 6;
+    public static const BASE_SCORE :int = 100;
 
     public static const INITIAL_THROBBER_COUNT :int = 2;
     public static const THROBBERS_PER_THROB :int = INITIAL_THROBBER_COUNT;
