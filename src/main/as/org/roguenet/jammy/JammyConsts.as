@@ -15,8 +15,7 @@ public class JammyConsts
     public static const HEIGHT :int = 768;
 
     public static const HEADER_WIDTH :int = WIDTH;
-    public static const HEADER_HEIGHT :int = THROBBER_MIN_RADIUS * 2 + HEADER_MARGIN * 2;
-    public static const HEADER_MARGIN :int = 5;
+    public static const HEADER_HEIGHT :int = 136;
 
     public static const MENU_TOP_MARGIN :int = 500;
 
@@ -53,8 +52,5 @@ public class JammyConsts
 
     public static const ROUND_TIME :int = 15.0;
     public static const TIMER_BEEPS_PER_ROUND :int = 5;
-
-    public static const TIMERBAR_WIDTH :int = HEADER_WIDTH / 3;
-    public static const TIMERBAR_HEIGHT :int = HEADER_HEIGHT / 2;
 }
 }
