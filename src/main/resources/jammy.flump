@@ -1,16 +1,16 @@
 {
-  "importDir": "",
   "exportDir": "",
   "exports": [
     {
-      "textureBorder": 1,
       "scale": 1,
-      "maxAtlasSize": 2048,
+      "textureBorder": 1,
       "format": "JSONZip",
-      "additionalScaleFactors": [],
       "name": "default",
+      "maxAtlasSize": 2048,
+      "additionalScaleFactors": [],
       "scaleFactorsString": "",
       "description": "'default' (JSONZip, 100%)"
     }
-  ]
+  ],
+  "importDir": ""
 }
