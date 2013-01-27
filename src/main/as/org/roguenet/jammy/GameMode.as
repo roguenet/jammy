@@ -116,38 +116,50 @@ public class GameMode extends AppMode
             new FunctionTask(view.model.destroySelf)));
     }
 
-    protected function addThrobber () :void
+    protected function addThrobber (excludeTypes :Array = null) :Throbber
     {
         if (_throbbers.size() >= JammyConsts.THROBBER_COUNT_MAX) {
             log.error("Already at max throbber count, not adding more");
-            return;
+            return null;
         }
 
         var pos :Vector2 = randomPos();
         if (pos == null) {
             log.warning("Unable to add throbber, nowhere to put it");
-            return;
+            return null;
         }
 
-        var type :ThrobberType = randomType();
+        var type :ThrobberType = randomType(excludeTypes);
         var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, type));
         addObject(sprite, _board.sprite);
         addObject(sprite.model);
         _throbbers.put(sprite.model, sprite);
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
+        return sprite.model;
     }
 
-    protected function randomType () :ThrobberType
+    protected function randomType (excludeTypes :Array = null) :ThrobberType
     {
-        // make sure we don't ever have more than 2 of the same type on the board at a time
+        // make sure we don't ever have more than 2 of the same type on the board at a time, or
+        // 2 that match the previous
         var counts :Map = Maps.newMapOf(ThrobberType);
+        if (_header.previous != null) {
+            counts.put(_header.previous.type, 1);
+        }
         for each (var throbber :Throbber in _throbbers.keys()) {
             counts.put(throbber.type, (counts.get(throbber.type) || 0) + 1);
         }
         var types :Array = ThrobberType.values();
+        if (excludeTypes != null) {
+            for (var ii :int = 0; ii < excludeTypes.length; ii++) {
+                var idx :int = types.indexOf(excludeTypes[ii]);
+                if (idx >= 0) types.splice(idx, 1);
+            }
+        }
         counts.forEach(function (type :ThrobberType, count :int) :void {
             if (count >= JammyConsts.MAX_THROBBERS_PER_TYPE) {
-                types.splice(types.indexOf(type), 1);
+                idx = types.indexOf(type);
+                if (idx >= 0) types.splice(idx, 1);
             }
         });
         return RAND.pick(types);
@@ -164,7 +176,13 @@ public class GameMode extends AppMode
             }
 
         } else if (newState == ThrobState.DOWN) {
-            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
+            var types :Array = [];
+            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) {
+                throbber = addThrobber(types);
+                if (throbber != null) {
+                    types.push(throbber.type);
+                }
+            }
             _youSuckTokens.shift();
             _youSuckTokens.push(0);
             updateFastMode();
