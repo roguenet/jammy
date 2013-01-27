@@ -9,7 +9,6 @@ import starling.utils.Color;
 
 public class ThrobberColor extends Enum
 {
-    public static const BLUE: ThrobberColor = new ThrobberColor("BLUE", Color.BLUE);
     public static const RED :ThrobberColor = new ThrobberColor("RED", Color.RED);
     public static const GREEN :ThrobberColor = new ThrobberColor("GREEN", Color.GREEN);
     public static const YELLOW :ThrobberColor = new ThrobberColor("YELLOW", Color.YELLOW);
