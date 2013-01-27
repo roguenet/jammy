@@ -60,6 +60,11 @@ public class GameMode extends AppMode
     {
         _timer.update(dt);
         super.update(dt);
+
+        _header.updateTimer(_totalTime += dt);
+        if (_totalTime >= JammyConsts.ROUND_TIME) {
+            viewport.pushMode(new MenuMode());
+        }
     }
 
     override public function destroyObject (ref :GameObjectRef) :void
@@ -296,6 +301,7 @@ public class GameMode extends AppMode
     // if the player clears a piece by hitting one out of order, he gets a you suck token for
     // LEVELS number of turns. These tokens can prevent the user from getting into fast mode.
     protected var _youSuckTokens :Array = [];
+    protected var _totalTime :Number = 0;
 
     private static const log :Log = Log.getLog(GameMode);
 }

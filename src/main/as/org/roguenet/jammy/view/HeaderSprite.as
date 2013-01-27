@@ -39,6 +39,11 @@ public class HeaderSprite extends RenderedSprite
         setScore(_score + throbber.getScoreValue());
     }
 
+    public function updateTimer (time :Number) :void
+    {
+        _timer.setPercent(time / JammyConsts.ROUND_TIME);
+    }
+
     protected function buildView () :void
     {
         var background :Shape = new Shape();
@@ -56,6 +61,10 @@ public class HeaderSprite extends RenderedSprite
             "Score: 0", "Verdana", 30, Color.GREEN, true);
         _scoreField.x = JammyConsts.HEADER_WIDTH - _scoreField.width;
         addDependentObject(new SceneObject(_scoreField), _sprite);
+
+        addDependentObject(_timer = new TimerBar(), _sprite);
+        _timer.sprite.x = JammyConsts.HEADER_MARGIN;
+        _timer.sprite.y = (JammyConsts.HEADER_HEIGHT - JammyConsts.TIMERBAR_HEIGHT) / 2;
     }
 
     protected function setScore (score :int) :void
@@ -70,5 +79,6 @@ public class HeaderSprite extends RenderedSprite
     protected var _prevThrob :StaticThrobberSprite;
     protected var _score :int;
     protected var _scoreField :TextField;
+    protected var _timer :TimerBar;
 }
 }
