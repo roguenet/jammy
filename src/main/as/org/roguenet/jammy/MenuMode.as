@@ -6,8 +6,8 @@ import flashbang.AppMode;
 import flashbang.objects.Button;
 import flashbang.objects.SceneObject;
 import flashbang.objects.SimpleTextButton;
+import flashbang.resource.ImageResource;
 
-import starling.display.Quad;
 import starling.text.TextField;
 import starling.utils.Color;
 
@@ -24,18 +24,18 @@ public class MenuMode extends AppMode
 
         modeSprite.addChild(JammyConsts.SPLASH);
 
-        if (_game != null && _game.score >= 0) {
-            addRow(new SceneObject(new TextField(JammyConsts.WIDTH, 40,
-                "Score: " + _game.score, "Verdana", 30, Color.GREEN, true)));
-        }
-
-        var start :Button = new SimpleTextButton("Start Game", 18);
+        var start :SceneObject = new SceneObject(ImageResource.createImage("jammy/play"));
         addRow(start);
-        _regs.addSignalListener(start.clicked, function () :void {
+        _regs.addSignalListener(start.touchEnded, function () :void {
             viewport.changeMode(new GameMode());
         });
 
-        var yOff :Number = (JammyConsts.HEIGHT - _totalHeight) / 2;
+        if (_game != null && _game.score >= 0) {
+            addRow(new SceneObject(new TextField(JammyConsts.WIDTH, 60,
+                "SCORE: " + _game.score, "Verdana", 40, Color.YELLOW, true)));
+        }
+
+        var yOff :Number = JammyConsts.MENU_TOP_MARGIN;
         for each (var obj :SceneObject in _rows) {
             obj.display.y = yOff;
             yOff += obj.display.height + MARGIN;
@@ -50,7 +50,7 @@ public class MenuMode extends AppMode
         addObject(obj, modeSprite);
     }
 
-    protected static const MARGIN :int = 10;
+    protected static const MARGIN :int = 15;
 
     protected var _game :GameMode;
     protected var _rows :Array = [];

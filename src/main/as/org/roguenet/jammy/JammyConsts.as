@@ -18,6 +18,8 @@ public class JammyConsts
     public static const HEADER_HEIGHT :int = THROBBER_MIN_RADIUS * 2 + HEADER_MARGIN * 2;
     public static const HEADER_MARGIN :int = 5;
 
+    public static const MENU_TOP_MARGIN :int = 500;
+
     public static const BOARD_X :int = 0;
     public static const BOARD_Y :int = 87;
     public static const BOARD_WIDTH :int = WIDTH;
