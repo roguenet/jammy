@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <application xmlns="http://ns.adobe.com/air/application/3.2" minimumPatchLevel="0">
     <id>org.roguenet.Jammy</id>
-    <name>Jammy</name>
+    <name>Blood Thinner</name>
     <versionNumber>0.0.1</versionNumber>
     <filename>jammy</filename>
     <supportedProfiles>mobileDevice</supportedProfiles>
@@ -9,7 +9,7 @@
         <renderMode>direct</renderMode>
         <aspectRatio>landscape</aspectRatio>
         <content>jammy.swf</content>
-        <title>Jammy</title>
+        <title>Blood Thinner</title>
         <systemChrome>none</systemChrome>
         <fullScreen>false</fullScreen>
     </initialWindow>
