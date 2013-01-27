@@ -2,6 +2,7 @@ package org.roguenet.jammy.view {
 
 import aspire.geom.Vector2;
 
+import flashbang.objects.SpriteObject;
 import flashbang.resource.ImageResource;
 
 import org.roguenet.jammy.JammyConsts;
@@ -9,7 +10,7 @@ import org.roguenet.jammy.model.Throbber;
 
 import starling.display.Image;
 
-public class StaticThrobberSprite extends RenderedSprite
+public class StaticThrobberSprite extends SpriteObject
 {
     public function StaticThrobberSprite (model :Throbber)
     {
