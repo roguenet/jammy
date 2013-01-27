@@ -14,6 +14,9 @@ public class ThrobberSprite extends StaticThrobberSprite
     {
         super(model);
         _regs.addSignalListener(_model.positionChanged, positionChanged);
+
+        // add a random rotation up to 30 degrees off in either direction
+        _sprite.rotation = ((Math.random() * 60 - 30) / 180) * Math.PI;
     }
 
     public function showFailure () :void
