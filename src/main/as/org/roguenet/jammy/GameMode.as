@@ -1,7 +1,6 @@
 package org.roguenet.jammy {
 
 import aspire.geom.Vector2;
-import aspire.util.Arrays;
 import aspire.util.F;
 import aspire.util.Log;
 import aspire.util.Map;
@@ -126,7 +125,7 @@ public class GameMode extends AppMode
         var types :Array = ThrobberType.values();
         counts.forEach(function (type :ThrobberType, count :int) :void {
             if (count >= JammyConsts.MAX_THROBBERS_PER_TYPE) {
-                Arrays.removeFirst(types, type);
+                types.splice(types.indexOf(type), 1);
             }
         });
         return RAND.pick(types);
