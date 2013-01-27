@@ -66,7 +66,7 @@ public class GameMode extends AppMode
             throbber.destroySelf();
             _header.setPreviousThrobber(throbber);
             Flashbang.audio.playSoundNamed("cardTap");
-            if (throbber.level == JammyConsts.THROBBER_LEVELS - 1) {
+            if (throbber.level == JammyConsts.THROBBER_LEVELS) {
                 // this one was schedule to be replaced until we tapped it.
                 addThrobber();
             }
@@ -74,7 +74,7 @@ public class GameMode extends AppMode
         } else {
             var view :ThrobberSprite = _throbbers.get(throbber);
             view.showFailure();
-            removeThrobber(view, throbber.level == JammyConsts.THROBBER_LEVELS - 1);
+            removeThrobber(view, throbber.level == JammyConsts.THROBBER_LEVELS);
             Flashbang.audio.playSoundNamed("wrongCard");
         }
     }
@@ -121,7 +121,7 @@ public class GameMode extends AppMode
             Flashbang.audio.playSoundNamed("pulse");
             var numMaxLevel :int = 0;
             for each (throbber in _throbbers.keys()) {
-                if (throbber.level == JammyConsts.THROBBER_LEVELS - 1) {
+                if (throbber.level == JammyConsts.THROBBER_LEVELS) {
                     numMaxLevel++;
                     removeThrobber(ThrobberSprite(_throbbers.get(throbber)), true);
                 }

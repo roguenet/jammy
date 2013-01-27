@@ -36,9 +36,9 @@ public class JammyConsts
     // with the configured sizes, we can't fit much more than 10 on the board.
     public static const THROBBER_COUNT_MAX :int = 12;
 
-    public static const THROBBER_LEVELS :int = 5;
+    public static const THROBBER_LEVELS :int = 6;
 
-    public static const INITIAL_THROBBER_COUNT :int = 3;
+    public static const INITIAL_THROBBER_COUNT :int = 2;
     public static const THROBBERS_PER_THROB :int = INITIAL_THROBBER_COUNT;
 
     public static const FADE_TIME :Number = 0.5;
