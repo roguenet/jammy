@@ -66,29 +66,21 @@ public class GameMode extends AppMode
             throbber.destroySelf();
             _header.setPreviousThrobber(throbber);
             Flashbang.audio.playSoundNamed("cardTap");
-            if (throbber.level == JammyConsts.THROBBER_LEVELS) {
-                // this one was schedule to be replaced until we tapped it.
-                addThrobber();
-            }
 
         } else {
             var view :ThrobberSprite = _throbbers.get(throbber);
             view.showFailure();
-            removeThrobber(view, throbber.level == JammyConsts.THROBBER_LEVELS);
+            removeThrobber(view);
             Flashbang.audio.playSoundNamed("wrongCard");
         }
     }
 
-    protected function removeThrobber (view :ThrobberSprite, replace :Boolean) :void
+    protected function removeThrobber (view :ThrobberSprite) :void
     {
-        var task :SerialTask = new SerialTask(new AlphaTask(0, JammyConsts.FADE_TIME),
+        view.addTask(new SerialTask(new AlphaTask(0, JammyConsts.FADE_TIME),
             // can't use SelfDestructTask because we need to destroy the model, and
             // this task is on the view.
-            new FunctionTask(view.model.destroySelf));
-        if (replace) {
-            task.addTask(new FunctionTask(addThrobber));
-        }
-        view.addTask(task);
+            new FunctionTask(view.model.destroySelf)));
     }
 
     protected function addThrobber () :void
@@ -112,24 +104,32 @@ public class GameMode extends AppMode
 
     protected function throbStateChanged (newState :ThrobState) :void
     {
+        var actions :Array = _stateActions.remove(newState);
+        if (actions != null) {
+            for each (var action :Function in actions) action();
+        }
+
         if (newState == ThrobState.UP) {
             for each (var throbber :Throbber in _throbbers.keys()) {
                 throbber.levelUp();
+                if (throbber.level == JammyConsts.THROBBER_LEVELS) {
+                    removeThrobber(ThrobberSprite(_throbbers.get(throbber)));
+                }
             }
 
         } else if (newState == ThrobState.DOWN) {
+            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
             Flashbang.audio.playSoundNamed("pulse");
-            var numMaxLevel :int = 0;
-            for each (throbber in _throbbers.keys()) {
-                if (throbber.level == JammyConsts.THROBBER_LEVELS) {
-                    numMaxLevel++;
-                    removeThrobber(ThrobberSprite(_throbbers.get(throbber)), true);
-                }
-            }
-            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB - numMaxLevel; ii++) {
-                addThrobber();
-            }
         }
+    }
+
+    protected function addStateAction (state :ThrobState, action :Function) :void
+    {
+        var actions :Array = _stateActions.get(state);
+        if (actions == null) {
+            _stateActions.put(state, actions = []);
+        }
+        actions.push(action);
     }
 
     protected function randomPos () :Vector2
@@ -237,6 +237,7 @@ public class GameMode extends AppMode
     protected var _header :HeaderSprite;
     protected var _board :BoardSprite;
     protected var _timer :ThrobTimer = new ThrobTimer();
+    protected var _stateActions :Map = Maps.newMapOf(ThrobState);
 
     private static const log :Log = Log.getLog(GameMode);
 }

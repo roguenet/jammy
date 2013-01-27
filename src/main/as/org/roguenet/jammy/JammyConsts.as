@@ -41,6 +41,6 @@ public class JammyConsts
     public static const INITIAL_THROBBER_COUNT :int = 2;
     public static const THROBBERS_PER_THROB :int = INITIAL_THROBBER_COUNT;
 
-    public static const FADE_TIME :Number = 0.5;
+    public static const FADE_TIME :Number = 0.25;
 }
 }
