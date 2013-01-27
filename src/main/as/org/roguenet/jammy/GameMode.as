@@ -89,6 +89,7 @@ public class GameMode extends AppMode
             var quad :Quad = new Quad(JammyConsts.WIDTH, JammyConsts.HEIGHT, 0);
             quad.alpha = 0.5;
             modeSprite.addChildAt(quad, modeSprite.getChildIndex(_header.sprite));
+            _header.lockDownScore();
             viewport.pushMode(new GameOverMode(this));
         }
     }

@@ -36,6 +36,11 @@ public class HeaderSprite extends SpriteObject
         setScore(_score + throbber.getScoreValue() + bonusScore);
     }
 
+    public function lockDownScore () :void
+    {
+        _scoreField.text = "SCORE: " + _score;
+    }
+
     public function updateTimer (time :Number) :void
     {
         var percent :Number = Math.max(0, Math.min(1,
