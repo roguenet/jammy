@@ -23,6 +23,11 @@ public class TimerBar extends RenderedSprite
         _bar = render(bar);
     }
 
+    public function get percent () :Number
+    {
+        return _bar.scaleX;
+    }
+
     public function setPercent (value :Number) :void
     {
         _bar.scaleX = Math.max(0, Math.min(1, value));

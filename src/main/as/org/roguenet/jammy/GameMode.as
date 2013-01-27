@@ -77,6 +77,7 @@ public class GameMode extends AppMode
 
         _header.updateTimer(_totalTime += dt);
         if (_totalTime >= JammyConsts.ROUND_TIME) {
+            Flashbang.audio.playSoundNamed("gameOver");
             viewport.pushMode(new MenuMode(this));
         }
     }

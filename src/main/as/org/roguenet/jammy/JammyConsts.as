@@ -45,7 +45,8 @@ public class JammyConsts
 
     public static const MAX_THROBBERS_PER_TYPE :int = 2;
 
-    public static const ROUND_TIME :int = 60.0;
+    public static const ROUND_TIME :int = 15.0;
+    public static const TIMER_BEEPS_PER_ROUND :int = 5;
 
     public static const TIMERBAR_WIDTH :int = HEADER_WIDTH / 3;
     public static const TIMERBAR_HEIGHT :int = HEADER_HEIGHT / 2;

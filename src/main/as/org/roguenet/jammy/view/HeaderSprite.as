@@ -4,6 +4,7 @@ import aspire.geom.Vector2;
 
 import flash.display.Shape;
 
+import flashbang.Flashbang;
 import flashbang.objects.SceneObject;
 
 import org.roguenet.jammy.JammyConsts;
@@ -46,7 +47,18 @@ public class HeaderSprite extends RenderedSprite
 
     public function updateTimer (time :Number) :void
     {
-        _timer.setPercent((JammyConsts.ROUND_TIME - time) / JammyConsts.ROUND_TIME);
+        var percent :Number = Math.max(0, Math.min(1,
+            (JammyConsts.ROUND_TIME - time) / JammyConsts.ROUND_TIME));
+        if (percent > _timer.percent) {
+            _beepsToPlay = JammyConsts.TIMER_BEEPS_PER_ROUND; // we're starting over
+        } else {
+            var remaining :Number = Math.max(0, JammyConsts.ROUND_TIME - time);
+            if (remaining < _beepsToPlay) {
+                Flashbang.audio.playSoundNamed("timer");
+                _beepsToPlay--;
+            }
+        }
+        _timer.setPercent(percent);
     }
 
     protected function buildView () :void
@@ -85,5 +97,6 @@ public class HeaderSprite extends RenderedSprite
     protected var _score :int;
     protected var _scoreField :TextField;
     protected var _timer :TimerBar;
+    protected var _beepsToPlay :int = JammyConsts.TIMER_BEEPS_PER_ROUND;
 }
 }
