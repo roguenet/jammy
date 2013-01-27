@@ -10,7 +10,6 @@ import org.roguenet.jammy.JammyConsts;
 import org.roguenet.jammy.model.Throbber;
 
 import starling.display.Image;
-import starling.events.Touch;
 import starling.utils.Color;
 
 public class ThrobberSprite extends StaticThrobberSprite
@@ -19,10 +18,6 @@ public class ThrobberSprite extends StaticThrobberSprite
     {
         super(model);
         _regs.addSignalListener(_model.positionChanged, positionChanged);
-        _regs.addSignalListener(touchEnded, function (touch :Touch) :void {
-            log.info("touched", "throbber", _model, "touch", touch, "spritePos",
-                new Vector2(_sprite.x, _sprite.y));
-        });
     }
 
     public function showFailure () :void
