@@ -16,10 +16,10 @@ import flashbang.Flashbang;
 import flashbang.GameObjectRef;
 import flashbang.tasks.AlphaTask;
 import flashbang.tasks.FunctionTask;
-import flashbang.tasks.SelfDestructTask;
 import flashbang.tasks.SerialTask;
 
 import org.roguenet.jammy.model.Throbber;
+import org.roguenet.jammy.view.BoardSprite;
 import org.roguenet.jammy.view.HeaderSprite;
 import org.roguenet.jammy.view.ThrobberSprite;
 
@@ -30,6 +30,9 @@ public class GameMode extends AppMode
         super.setup();
 
         addObject(_header = new HeaderSprite(), modeSprite);
+        addObject(_board = new BoardSprite(), modeSprite);
+        _regs.addSignalListener(_board.touchEnded,
+            F.callback(Flashbang.audio.playSoundNamed, "noCardTap"));
         for (var ii :int = 0; ii < JammyConsts.INITIAL_THROBBER_COUNT; ii++) {
             addThrobber();
         }
@@ -62,7 +65,7 @@ public class GameMode extends AppMode
         if (_header.previous == null || _header.previous.isCompatible(throbber)) {
             throbber.destroySelf();
             _header.setPreviousThrobber(throbber);
-            Flashbang.audio.playSoundNamed("tapCard");
+            Flashbang.audio.playSoundNamed("cardTap");
             if (throbber.level == JammyConsts.THROBBER_LEVELS - 1) {
                 // this one was schedule to be replaced until we tapped it.
                 addThrobber();
@@ -232,6 +235,7 @@ public class GameMode extends AppMode
 
     protected var _throbbers :Map = Maps.newMapOf(Throbber);
     protected var _header :HeaderSprite;
+    protected var _board :BoardSprite;
     protected var _timer :ThrobTimer = new ThrobTimer();
 
     private static const log :Log = Log.getLog(GameMode);
