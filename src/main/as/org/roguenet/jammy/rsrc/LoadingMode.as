@@ -5,6 +5,7 @@ import aspire.util.Log;
 import flashbang.AppMode;
 import flashbang.resource.ResourceSet;
 
+import org.roguenet.jammy.GameMode;
 import org.roguenet.jammy.MenuMode;
 
 public class LoadingMode extends AppMode
@@ -16,7 +17,8 @@ public class LoadingMode extends AppMode
         SoundResources.addSounds(resources);
         resources.load(function () :void {
                 // resources loaded. kick off the game.
-                viewport.changeMode(new MenuMode());
+                viewport.changeMode(new GameMode());
+                viewport.pushMode(new MenuMode());
             }, function (e :Error) :void {
                 // there was a load error
                 log.error("Error loading resources", e);
