@@ -38,6 +38,7 @@ public class HeaderSprite extends SpriteObject
 
     public function lockDownScore () :void
     {
+        removeNamedTasks("score");
         _scoreField.text = "SCORE: " + _score;
     }
 
