@@ -378,11 +378,11 @@ class ThrobTimer
 
     protected var _value :Number;
     protected var _stateElapsed :Number = 0;
-    protected var _throbTime :Number = JammyConsts.THROB_TIME_BASE / 2;
+    protected var _throbTime :Number = HALF_TIME_FAST;
     protected var _modeTimeElapsed :Number = 0;
     protected var _state :ThrobState = ThrobState.IDLE_UP;
     protected var _fast :Boolean = true;
-    protected var _prevModeTime :Number = HALF_TIME_BASE;
+    protected var _prevModeTime :Number = _throbTime;
     protected var _rampUpTime :Number = RAMP_UP_TIME;
 }
 
