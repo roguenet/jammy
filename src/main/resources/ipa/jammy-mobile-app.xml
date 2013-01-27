@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<application xmlns="http://ns.adobe.com/air/application/3.2" minimumPatchLevel="0">
+<application xmlns="http://ns.adobe.com/air/application/3.5" minimumPatchLevel="0">
     <id>org.roguenet.Jammy</id>
     <name>Blood Thinner</name>
     <versionNumber>0.0.1</versionNumber>
@@ -16,6 +16,7 @@
     <icon>
         <image29x29>icons/Icon_29.png</image29x29>
         <image57x57>icons/Icon_57.png</image57x57>
+        <image144x144>icons/Icon_144.png</image144x144>
         <image512x512>icons/Icon_512.png</image512x512>
     </icon>
     <iPhone>
