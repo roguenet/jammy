@@ -99,7 +99,7 @@ public class GameMode extends AppMode
             return;
         }
 
-        var type :ThrobberType = getRandomType();
+        var type :ThrobberType = randomType();
         var color :ThrobberColor = ThrobberColor.random();
         var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, color, type));
         addObject(sprite, modeSprite);
@@ -108,7 +108,7 @@ public class GameMode extends AppMode
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
     }
 
-    protected function getRandomType () :ThrobberType
+    protected function randomType () :ThrobberType
     {
         // make sure we don't ever have more than 2 of the same type on the board at a time
         var counts :Map = Maps.newMapOf(ThrobberType);
