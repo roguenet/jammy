@@ -40,6 +40,11 @@ public class ThrobberType extends Enum
         return _weights.getNextData();
     }
 
+    public function get assetName () :String
+    {
+        return "jammy/" + name().toLowerCase();
+    }
+
     public function get value () :String
     {
         return _value;

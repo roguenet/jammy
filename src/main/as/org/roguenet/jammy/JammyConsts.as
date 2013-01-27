@@ -25,6 +25,8 @@ public class JammyConsts
     public static const THROBBER_MAX_RADIUS :int = 60;
     public static const THROBBER_MIN_RADIUS :int = 25;
 
+    public static const BLOOD_SCALE_FACTOR :Number = 0.46875;
+
     public static const THROB_TIME_BASE :Number = 2.5;
     public static const THROB_TIME_FAST :Number = 0.75;
     public static const THROB_TIMING_THRESHOLD :Number = 0.6;

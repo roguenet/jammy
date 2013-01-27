@@ -133,8 +133,7 @@ public class GameMode extends AppMode
         }
 
         var type :ThrobberType = randomType();
-        var color :ThrobberColor = ThrobberColor.random();
-        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, color, type));
+        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, type));
         addObject(sprite, _board.sprite);
         addObject(sprite.model);
         _throbbers.put(sprite.model, sprite);

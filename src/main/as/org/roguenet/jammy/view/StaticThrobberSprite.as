@@ -2,12 +2,8 @@ package org.roguenet.jammy.view {
 
 import aspire.geom.Vector2;
 
-import flash.display.Sprite;
-import flash.filters.DropShadowFilter;
-import flash.text.TextField;
-import flash.text.TextFormat;
+import flashbang.resource.ImageResource;
 
-import org.roguenet.jammy.GameMode;
 import org.roguenet.jammy.JammyConsts;
 import org.roguenet.jammy.model.Throbber;
 
@@ -31,25 +27,11 @@ public class StaticThrobberSprite extends RenderedSprite
 
     protected function buildView () :void
     {
-        var circle :Sprite = new Sprite();
-        circle.graphics.beginFill(_model.color.value);
-        circle.graphics.drawCircle(JammyConsts.THROBBER_MAX_RADIUS,
-            JammyConsts.THROBBER_MAX_RADIUS, JammyConsts.THROBBER_MAX_RADIUS);
-        circle.graphics.endFill();
-        var value :TextField = new TextField();
-        var format :TextFormat = value.defaultTextFormat;
-        format.bold = true;
-        format.size = 50;
-        format.underline = true;
-        value.defaultTextFormat = format;
-        value.text = _model.type.value;
-        value.x = JammyConsts.THROBBER_MAX_RADIUS - 10;
-        value.y = JammyConsts.THROBBER_MAX_RADIUS - 30; // fudge to near the middle
-        circle.addChild(value);
-        circle.filters = [ new DropShadowFilter() ];
-        var img :Image = render(circle, 10);
+        var img :Image = ImageResource.createImage(_model.type.assetName);
+        img.scaleX = img.scaleY = JammyConsts.BLOOD_SCALE_FACTOR;
         img.x = -JammyConsts.THROBBER_MAX_RADIUS - 10;
         img.y = -JammyConsts.THROBBER_MAX_RADIUS - 10;
+        _sprite.addChild(img);
     }
 
     protected function positionChanged (pos :Vector2) :void

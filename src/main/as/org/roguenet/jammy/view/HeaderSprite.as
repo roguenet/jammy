@@ -36,7 +36,7 @@ public class HeaderSprite extends RenderedSprite
         }
 
         _prevThrob = new StaticThrobberSprite(
-            new Throbber(PREV_THROB_POS.clone(), throbber.color, throbber.type));
+            new Throbber(PREV_THROB_POS.clone(), throbber.type));
         _prevThrob.display.scaleX = _prevThrob.display.scaleY = 0.75;
         addDependentObject(_prevThrob, _sprite);
         addDependentObject(_prevThrob.model);

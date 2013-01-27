@@ -15,17 +15,11 @@ public class Throbber extends GameObject
 {
     public const positionChanged :Signal = new Signal();
 
-    public function Throbber (position :Vector2, color :ThrobberColor, type :ThrobberType)
+    public function Throbber (position :Vector2, type :ThrobberType)
     {
         _pos = position;
         setRadius(radiusForLevel(_level));
-        _color = color;
         _type = type;
-    }
-
-    public function get color () :ThrobberColor
-    {
-        return _color;
     }
 
     public function get type () :ThrobberType
@@ -111,7 +105,7 @@ public class Throbber extends GameObject
 
     override public function toString () :String
     {
-        return "Throbber [" + _pos + ", " + _radius + ", " + _color + ", " + _type + "]";
+        return "Throbber [" + _pos + ", " + _radius + ", " + _type + "]";
     }
 
     protected static function radiusForLevel (level :int) :Number
@@ -123,7 +117,6 @@ public class Throbber extends GameObject
     protected static const MIN_RADIUS :int = JammyConsts.THROBBER_MIN_RADIUS;
     protected static const LEVELS :int = JammyConsts.THROBBER_LEVELS;
 
-    protected var _color :ThrobberColor;
     protected var _type :ThrobberType;
     protected var _pos :Vector2;
     protected var _radius :int;
