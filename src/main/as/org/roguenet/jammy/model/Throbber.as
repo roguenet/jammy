@@ -44,6 +44,11 @@ public class Throbber extends GameObject
         return _radius;
     }
 
+    public function get level () :int
+    {
+        return _level;
+    }
+
     public function isCompatible (other :Throbber) :Boolean
     {
         return type.next == other.type || type.prev == other.type;
@@ -58,11 +63,7 @@ public class Throbber extends GameObject
 
     public function levelUp () :void
     {
-        if (++_level == JammyConsts.THROBBER_LEVELS) {
-            destroySelf();
-        } else {
-            addTask(new RadiusTask(radiusForLevel(_level)));
-        }
+        addTask(new RadiusTask(radiusForLevel(++_level)));
     }
 
     public function getScoreValue () :int

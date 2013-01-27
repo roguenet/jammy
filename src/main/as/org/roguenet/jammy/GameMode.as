@@ -16,6 +16,7 @@ import flashbang.Flashbang;
 import flashbang.GameObjectRef;
 import flashbang.tasks.AlphaTask;
 import flashbang.tasks.FunctionTask;
+import flashbang.tasks.SelfDestructTask;
 import flashbang.tasks.SerialTask;
 
 import org.roguenet.jammy.model.Throbber;
@@ -62,15 +63,29 @@ public class GameMode extends AppMode
             throbber.destroySelf();
             _header.setPreviousThrobber(throbber);
             Flashbang.audio.playSoundNamed("tapCard");
+            if (throbber.level == JammyConsts.THROBBER_LEVELS - 1) {
+                // this one was schedule to be replaced until we tapped it.
+                addThrobber();
+            }
 
         } else {
             var view :ThrobberSprite = _throbbers.get(throbber);
             view.showFailure();
-            view.addTask(new SerialTask(
-                new AlphaTask(0, JammyConsts.FADE_TIME),
-                new FunctionTask(throbber.destroySelf)));
+            removeThrobber(view, throbber.level == JammyConsts.THROBBER_LEVELS - 1);
             Flashbang.audio.playSoundNamed("wrongCard");
         }
+    }
+
+    protected function removeThrobber (view :ThrobberSprite, replace :Boolean) :void
+    {
+        var task :SerialTask = new SerialTask(new AlphaTask(0, JammyConsts.FADE_TIME),
+            // can't use SelfDestructTask because we need to destroy the model, and
+            // this task is on the view.
+            new FunctionTask(view.model.destroySelf));
+        if (replace) {
+            task.addTask(new FunctionTask(addThrobber));
+        }
+        view.addTask(task);
     }
 
     protected function addThrobber () :void
@@ -95,12 +110,22 @@ public class GameMode extends AppMode
     protected function throbStateChanged (newState :ThrobState) :void
     {
         if (newState == ThrobState.UP) {
-            // work with an array copy, as some throbbers may get removed during this process
-            for each (var throbber :Throbber in _throbbers.keys()) throbber.levelUp();
-            // add new throbbers every throb
-            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
+            for each (var throbber :Throbber in _throbbers.keys()) {
+                throbber.levelUp();
+            }
+
         } else if (newState == ThrobState.DOWN) {
             Flashbang.audio.playSoundNamed("pulse");
+            var numMaxLevel :int = 0;
+            for each (throbber in _throbbers.keys()) {
+                if (throbber.level == JammyConsts.THROBBER_LEVELS - 1) {
+                    numMaxLevel++;
+                    removeThrobber(ThrobberSprite(_throbbers.get(throbber)), true);
+                }
+            }
+            for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB - numMaxLevel; ii++) {
+                addThrobber();
+            }
         }
     }
 
