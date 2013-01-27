@@ -333,7 +333,7 @@ class ThrobTimer
 
         var distanceNormal :Number =
             (_throbTime - HALF_TIME_FAST) / (HALF_TIME_BASE - HALF_TIME_FAST);
-        if (_fast) {
+        if (!_fast) {
             distanceNormal = 1 - distanceNormal;
         }
         _rampUpTime = RAMP_UP_TIME * distanceNormal;
