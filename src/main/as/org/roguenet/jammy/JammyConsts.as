@@ -22,8 +22,8 @@ public class JammyConsts
     public static const PLACEMENT_ATTEMPTS_MAX :int = 100;
     public static const PLACEMENT_BUFFER :int = 30;
 
-    public static const THROBBER_MAX_RADIUS :int = 70;
-    public static const THROBBER_MIN_RADIUS :int = 30;
+    public static const THROBBER_MAX_RADIUS :int = 60;
+    public static const THROBBER_MIN_RADIUS :int = 25;
 
     public static const THROB_TIME_MAX :Number = 2.0;
     public static const THROB_TIME_MIN :Number = THROB_TIME_MAX; // no time changes right now
@@ -33,11 +33,11 @@ public class JammyConsts
     public static const THROB_MAX :Number = 1.15;
 
     // with the configured sizes, we can't fit much more than 10 on the board.
-    public static const THROBBER_COUNT_MAX :int = 10;
+    public static const THROBBER_COUNT_MAX :int = 12;
 
-    public static const THROBBER_LEVELS :int = 5;
+    public static const THROBBER_LEVELS :int = 4;
 
-    public static const INITIAL_THROBBER_COUNT :int = 2;
+    public static const INITIAL_THROBBER_COUNT :int = 3;
     public static const THROBBERS_PER_THROB :int = INITIAL_THROBBER_COUNT;
 
     public static const FADE_TIME :Number = 0.5;
