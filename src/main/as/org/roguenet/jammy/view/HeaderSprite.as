@@ -2,8 +2,6 @@ package org.roguenet.jammy.view {
 
 import aspire.geom.Vector2;
 
-import flash.display.Shape;
-
 import flashbang.Flashbang;
 import flashbang.objects.SceneObject;
 import flashbang.objects.SpriteObject;
@@ -13,7 +11,6 @@ import org.roguenet.jammy.JammyConsts;
 import org.roguenet.jammy.model.Throbber;
 
 import starling.text.TextField;
-import starling.utils.Color;
 
 public class HeaderSprite extends SpriteObject
 {
@@ -67,7 +64,7 @@ public class HeaderSprite extends SpriteObject
     {
         _sprite.addChild(ImageResource.createImage("jammy/header"));
 
-        _scoreField = new TextField(400, 60, "", "Verdana", 36, Color.RED, true);
+        _scoreField = new TextField(400, 60, "", "Verdana", 36, 0xC60511, true);
         setScore(0);
         _scoreField.hAlign = "center"
         _scoreField.x = JammyConsts.HEADER_WIDTH - _scoreField.width - 20;

@@ -1,15 +1,10 @@
 package org.roguenet.jammy {
 
-import flash.display.DisplayObject;
-
 import flashbang.AppMode;
-import flashbang.objects.Button;
 import flashbang.objects.SceneObject;
-import flashbang.objects.SimpleTextButton;
 import flashbang.resource.ImageResource;
 
 import starling.text.TextField;
-import starling.utils.Color;
 
 public class MenuMode extends AppMode
 {
@@ -32,7 +27,7 @@ public class MenuMode extends AppMode
 
         if (_game != null && _game.score >= 0) {
             addRow(new SceneObject(new TextField(JammyConsts.WIDTH, 60,
-                "SCORE: " + _game.score, "Verdana", 40, Color.YELLOW, true)));
+                "SCORE: " + _game.score, "Verdana", 40, 0xFFEA00, true)));
         }
 
         var yOff :Number = JammyConsts.MENU_TOP_MARGIN;
