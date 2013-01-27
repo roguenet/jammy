@@ -75,6 +75,7 @@ public class GameMode extends AppMode
             throbber.destroySelf();
             _header.setPreviousThrobber(throbber);
             Flashbang.audio.playSoundNamed("cardTap");
+            updateFastMode();
 
         } else {
             var view :ThrobberSprite = _throbbers.get(throbber);
@@ -146,13 +147,11 @@ public class GameMode extends AppMode
                 }
             }
 
-            _youSuckTokens.shift();
-            _youSuckTokens.push(0);
-            _timer.setFastMode(
-                _throbbers.size() + youSuckValue() < JammyConsts.FAST_MODE_THRESHOLD);
-
         } else if (newState == ThrobState.DOWN) {
             for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
+            _youSuckTokens.shift();
+            _youSuckTokens.push(0);
+            updateFastMode();
             Flashbang.audio.playSoundNamed("pulse");
         }
     }
@@ -164,6 +163,12 @@ public class GameMode extends AppMode
             _stateActions.put(state, actions = []);
         }
         actions.push(action);
+    }
+
+    protected function updateFastMode () :void
+    {
+        _timer.setFastMode(
+            _throbbers.size() + youSuckValue() < JammyConsts.FAST_MODE_THRESHOLD);
     }
 
     protected function youSuckValue () :int
