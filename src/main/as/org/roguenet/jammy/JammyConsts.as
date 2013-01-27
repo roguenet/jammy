@@ -17,7 +17,7 @@ public class JammyConsts
     public static const HEADER_WIDTH :int = WIDTH;
     public static const HEADER_HEIGHT :int = 136;
 
-    public static const MENU_TOP_MARGIN :int = 500;
+    public static const MENU_TOP_MARGIN :int = 391;
 
     public static const BOARD_X :int = 0;
     public static const BOARD_Y :int = 87;

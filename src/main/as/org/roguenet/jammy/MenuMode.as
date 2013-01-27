@@ -45,7 +45,7 @@ public class MenuMode extends AppMode
         addObject(obj, modeSprite);
     }
 
-    protected static const MARGIN :int = 15;
+    protected static const MARGIN :int = 12;
 
     protected var _game :GameMode;
     protected var _rows :Array = [];
