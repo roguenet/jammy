@@ -32,6 +32,7 @@ public class HeaderSprite extends RenderedSprite
 
         _prevThrob = new StaticThrobberSprite(
             new Throbber(PREV_THROB_POS.clone(), throbber.color, throbber.type));
+        _prevThrob.display.scaleX = _prevThrob.display.scaleY = 0.75;
         addDependentObject(_prevThrob, _sprite);
         addDependentObject(_prevThrob.model);
 
@@ -64,7 +65,7 @@ public class HeaderSprite extends RenderedSprite
 
     protected static const CORNER_ROUND_SIZE :Number = 20;
     protected static const PREV_THROB_POS :Vector2 = new Vector2(JammyConsts.HEADER_WIDTH / 2,
-        JammyConsts.THROBBER_MIN_RADIUS + JammyConsts.HEADER_MARGIN);
+        JammyConsts.THROBBER_MAX_RADIUS * 0.75 + JammyConsts.HEADER_MARGIN);
 
     protected var _prevThrob :StaticThrobberSprite;
     protected var _score :int;

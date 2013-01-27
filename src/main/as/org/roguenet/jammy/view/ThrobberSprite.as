@@ -40,7 +40,13 @@ public class ThrobberSprite extends StaticThrobberSprite
         updateRadius();
     }
 
-    override protected function updateRadius () :void
+    override protected function addedToMode () :void
+    {
+        super.addedToMode();
+        updateRadius();
+    }
+
+    protected function updateRadius () :void
     {
         _sprite.scaleX = _sprite.scaleY =
             GameMode(mode).throb * (_model.radius / JammyConsts.THROBBER_MAX_RADIUS);

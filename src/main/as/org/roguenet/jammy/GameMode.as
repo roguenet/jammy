@@ -14,6 +14,7 @@ import flash.geom.Rectangle;
 import flashbang.AppMode;
 import flashbang.Flashbang;
 import flashbang.GameObjectRef;
+import flashbang.objects.SpriteObject;
 import flashbang.tasks.AlphaTask;
 import flashbang.tasks.FunctionTask;
 import flashbang.tasks.SerialTask;
@@ -21,7 +22,7 @@ import flashbang.tasks.SerialTask;
 import org.roguenet.jammy.model.Throbber;
 import org.roguenet.jammy.model.ThrobberColor;
 import org.roguenet.jammy.model.ThrobberType;
-import org.roguenet.jammy.view.BoardSprite;
+import org.roguenet.jammy.view.BoardBackgroundSprite;
 import org.roguenet.jammy.view.HeaderSprite;
 import org.roguenet.jammy.view.ThrobberSprite;
 
@@ -31,9 +32,12 @@ public class GameMode extends AppMode
     {
         super.setup();
 
+        // header on top so its previous throbber sprite can overhang the board
+        addObject(_board = new SpriteObject(), modeSprite);
         addObject(_header = new HeaderSprite(), modeSprite);
-        addObject(_board = new BoardSprite(), modeSprite);
-        _regs.addSignalListener(_board.touchEnded,
+
+        addObject(_boardBackground = new BoardBackgroundSprite(), _board.sprite);
+        _regs.addSignalListener(_boardBackground.touchEnded,
             F.callback(Flashbang.audio.playSoundNamed, "noCardTap"));
         for (var ii :int = 0; ii < JammyConsts.INITIAL_THROBBER_COUNT; ii++) {
             addThrobber();
@@ -109,7 +113,7 @@ public class GameMode extends AppMode
         var type :ThrobberType = randomType();
         var color :ThrobberColor = ThrobberColor.random();
         var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, color, type));
-        addObject(sprite, modeSprite);
+        addObject(sprite, _board.sprite);
         addObject(sprite.model);
         _throbbers.put(sprite.model, sprite);
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
@@ -285,7 +289,8 @@ public class GameMode extends AppMode
 
     protected var _throbbers :Map = Maps.newMapOf(Throbber);
     protected var _header :HeaderSprite;
-    protected var _board :BoardSprite;
+    protected var _boardBackground :BoardBackgroundSprite;
+    protected var _board :SpriteObject;
     protected var _timer :ThrobTimer = new ThrobTimer();
     protected var _stateActions :Map = Maps.newMapOf(ThrobState);
     // if the player clears a piece by hitting one out of order, he gets a you suck token for

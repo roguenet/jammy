@@ -4,9 +4,9 @@ import flash.display.Shape;
 
 import org.roguenet.jammy.JammyConsts;
 
-public class BoardSprite extends RenderedSprite
+public class BoardBackgroundSprite extends RenderedSprite
 {
-    public function BoardSprite ()
+    public function BoardBackgroundSprite ()
     {
         _sprite.x = JammyConsts.BOARD_X;
         _sprite.y = JammyConsts.BOARD_Y;

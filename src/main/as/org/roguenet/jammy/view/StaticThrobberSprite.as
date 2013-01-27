@@ -58,17 +58,6 @@ public class StaticThrobberSprite extends RenderedSprite
         _sprite.y = pos.y;
     }
 
-    override protected function addedToMode () :void
-    {
-        super.addedToMode();
-        updateRadius();
-    }
-
-    protected function updateRadius () :void
-    {
-        _sprite.scaleX = _sprite.scaleY = _model.radius / JammyConsts.THROBBER_MAX_RADIUS;
-    }
-
     protected var _model :Throbber;
 }
 }
