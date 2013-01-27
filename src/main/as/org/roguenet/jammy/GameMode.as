@@ -121,7 +121,7 @@ public class GameMode extends AppMode
         // make sure we don't ever have more than 2 of the same type on the board at a time
         var counts :Map = Maps.newMapOf(ThrobberType);
         for each (var throbber :Throbber in _throbbers.keys()) {
-            counts.put(throbber.type, (counts.get(throbber) || 0) + 1);
+            counts.put(throbber.type, (counts.get(throbber.type) || 0) + 1);
         }
         var types :Array = ThrobberType.values();
         counts.forEach(function (type :ThrobberType, count :int) :void {
