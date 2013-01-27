@@ -144,7 +144,7 @@ class RadiusTask extends InterpolatingTask
 {
     public function RadiusTask (radius :Number)
     {
-        super((1 - JammyConsts.THROB_TIMING_THRESHOLD) * (JammyConsts.THROB_TIME_MIN / 2),
+        super((1 - JammyConsts.THROB_TIMING_THRESHOLD) * (JammyConsts.THROB_TIME_BASE / 2),
             Easing.easeIn);
         _to = radius;
     }

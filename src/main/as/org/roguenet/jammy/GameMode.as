@@ -319,14 +319,27 @@ class ThrobTimer
 
     public function setFastMode (fast :Boolean) :void
     {
+        if (_fast == fast) {
+            return;
+        }
+
         _fast = fast;
+        _modeTimeElapsed = 0;
+        _prevModeTime = _throbTime;
+
+        var distanceNormal :Number =
+            (_throbTime - HALF_TIME_FAST) / (HALF_TIME_BASE - HALF_TIME_FAST);
+        if (_fast) {
+            distanceNormal = 1 - distanceNormal;
+        }
+        _rampUpTime = RAMP_UP_TIME * distanceNormal;
     }
 
     public function update (dt :Number) :void
     {
         // update tracking values.
         _stateElapsed += dt;
-        _totalTimeElapsed += dt;
+        _modeTimeElapsed += dt;
 
         changeState(_state.checkState(_stateElapsed, _state.stateTime(_throbTime)));
         // our state may have changed, recalculate the state time.
@@ -342,27 +355,25 @@ class ThrobTimer
         var stateTime :Number = _state.stateTime(_throbTime);
         _stateElapsed = _stateElapsed > stateTime ? _stateElapsed % stateTime : 0;
         if (newState.isUp() != _state.isUp()) {
-            _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
-                Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME) -
-                // flat discount for fast players
-                (_fast ? HALF_FAST_DISCOUNT : 0);
-            aspire.util.Log.getLog(ThrobTimer).info("Updated throb time", "time", _throbTime,
-                "fast", _fast);
+            _throbTime = Easing.linear(_prevModeTime,
+                _fast ? HALF_TIME_FAST : HALF_TIME_BASE,
+                Math.min(_modeTimeElapsed, _rampUpTime), _rampUpTime);
         }
         throbStateChanged.dispatch(_state = newState);
     }
 
-    protected static const HALF_TIME_MIN :Number = JammyConsts.THROB_TIME_MIN / 2;
-    protected static const HALF_TIME_MAX :Number = JammyConsts.THROB_TIME_MAX / 2;
-    protected static const HALF_FAST_DISCOUNT :Number = JammyConsts.FAST_MODE_DISCOUNT / 2;
+    protected static const HALF_TIME_BASE :Number = JammyConsts.THROB_TIME_BASE / 2;
+    protected static const HALF_TIME_FAST :Number = JammyConsts.THROB_TIME_FAST / 2;
     protected static const RAMP_UP_TIME :Number = JammyConsts.THROB_RAMP_UP_TIME;
 
     protected var _value :Number;
     protected var _stateElapsed :Number = 0;
-    protected var _throbTime :Number = JammyConsts.THROB_TIME_MAX / 2;
-    protected var _totalTimeElapsed :Number = 0;
+    protected var _throbTime :Number = JammyConsts.THROB_TIME_BASE / 2;
+    protected var _modeTimeElapsed :Number = 0;
     protected var _state :ThrobState = ThrobState.IDLE_UP;
     protected var _fast :Boolean = false;
+    protected var _prevModeTime :Number = HALF_TIME_BASE;
+    protected var _rampUpTime :Number = RAMP_UP_TIME;
 }
 
 class Quadrant extends Enum
