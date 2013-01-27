@@ -246,7 +246,7 @@ class ThrobTimer
                 _throbTime = Easing.linear(HALF_TIME_MAX, HALF_TIME_MIN,
                     Math.min(_totalTimeElapsed, RAMP_UP_TIME), RAMP_UP_TIME);
             }
-            throbStateChanged.dispatch(_state = state);
+            throbStateChanged.dispatch(_state = newState);
         }
 
         _value = _state.ease(_throbElapsed, _throbTime);
