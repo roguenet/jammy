@@ -3,8 +3,12 @@ package org.roguenet.jammy {
 import aspire.util.Random;
 import aspire.util.Randoms;
 
+import starling.display.Image;
+
 public class JammyConsts
 {
+    public static var SPLASH :Image;
+
     public static const RAND :Randoms = new Randoms(Random.create());
 
     public static const WIDTH :int = 1024;

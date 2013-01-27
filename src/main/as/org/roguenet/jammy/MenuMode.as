@@ -1,5 +1,7 @@
 package org.roguenet.jammy {
 
+import flash.display.DisplayObject;
+
 import flashbang.AppMode;
 import flashbang.objects.Button;
 import flashbang.objects.SceneObject;
@@ -11,7 +13,7 @@ import starling.utils.Color;
 
 public class MenuMode extends AppMode
 {
-    public function MenuMode (game :GameMode)
+    public function MenuMode (game :GameMode = null)
     {
         _game = game;
     }
@@ -20,11 +22,9 @@ public class MenuMode extends AppMode
     {
         super.setup();
 
-        var quad :Quad = new Quad(JammyConsts.WIDTH, JammyConsts.HEIGHT, 0);
-        quad.alpha = 0.75;
-        modeSprite.addChild(quad);
+        modeSprite.addChild(JammyConsts.SPLASH);
 
-        if (_game.score >= 0) {
+        if (_game != null && _game.score >= 0) {
             addRow(new SceneObject(new TextField(JammyConsts.WIDTH, 40,
                 "Score: " + _game.score, "Verdana", 30, Color.GREEN, true)));
         }
@@ -32,7 +32,7 @@ public class MenuMode extends AppMode
         var start :Button = new SimpleTextButton("Start Game", 18);
         addRow(start);
         _regs.addSignalListener(start.clicked, function () :void {
-            viewport.popMode();
+            viewport.changeMode(new GameMode());
         });
 
         var yOff :Number = (JammyConsts.HEIGHT - _totalHeight) / 2;

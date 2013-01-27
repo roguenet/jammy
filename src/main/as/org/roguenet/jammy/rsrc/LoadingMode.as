@@ -6,21 +6,22 @@ import flashbang.AppMode;
 import flashbang.resource.ResourceSet;
 
 import org.roguenet.jammy.GameMode;
+import org.roguenet.jammy.JammyConsts;
 import org.roguenet.jammy.MenuMode;
 
 public class LoadingMode extends AppMode
 {
     public function LoadingMode ()
     {
+        modeSprite.addChild(JammyConsts.SPLASH);
+
         var resources :ResourceSet = new ResourceSet();
         resources.add({type: "flump", name: "jammy", data: JAMMY});
         resources.add({type: "flump", name: "jammy-retina", data: JAMMY_RETINA});
         SoundResources.addSounds(resources);
         resources.load(function () :void {
                 // resources loaded. kick off the game.
-                var game :GameMode = new GameMode();
-                viewport.changeMode(game);
-                viewport.pushMode(new MenuMode(game));
+                viewport.pushMode(new MenuMode());
             }, function (e :Error) :void {
                 // there was a load error
                 log.error("Error loading resources", e);
