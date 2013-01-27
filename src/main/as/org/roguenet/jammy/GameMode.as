@@ -12,6 +12,7 @@ import aspire.util.Sets;
 import flash.geom.Rectangle;
 
 import flashbang.AppMode;
+import flashbang.Flashbang;
 import flashbang.GameObjectRef;
 import flashbang.tasks.AlphaTask;
 import flashbang.tasks.FunctionTask;
@@ -60,6 +61,7 @@ public class GameMode extends AppMode
         if (_header.previous == null || _header.previous.isCompatible(throbber)) {
             throbber.destroySelf();
             _header.setPreviousThrobber(throbber);
+            Flashbang.audio.playSoundNamed("tapCard");
 
         } else {
             var view :ThrobberSprite = _throbbers.get(throbber);
@@ -67,6 +69,7 @@ public class GameMode extends AppMode
             view.addTask(new SerialTask(
                 new AlphaTask(0, JammyConsts.FADE_TIME),
                 new FunctionTask(throbber.destroySelf)));
+            Flashbang.audio.playSoundNamed("wrongCard");
         }
     }
 
@@ -96,6 +99,8 @@ public class GameMode extends AppMode
             for each (var throbber :Throbber in _throbbers.keys()) throbber.levelUp();
             // add new throbbers every throb
             for (var ii :int = 0; ii < JammyConsts.THROBBERS_PER_THROB; ii++) addThrobber();
+        } else if (newState == ThrobState.DOWN) {
+            Flashbang.audio.playSoundNamed("pulse");
         }
     }
 
