@@ -1,6 +1,7 @@
 package org.roguenet.jammy {
 
 import aspire.geom.Vector2;
+import aspire.util.Arrays;
 import aspire.util.F;
 import aspire.util.Log;
 import aspire.util.Map;
@@ -19,6 +20,8 @@ import flashbang.tasks.FunctionTask;
 import flashbang.tasks.SerialTask;
 
 import org.roguenet.jammy.model.Throbber;
+import org.roguenet.jammy.model.ThrobberColor;
+import org.roguenet.jammy.model.ThrobberType;
 import org.roguenet.jammy.view.BoardSprite;
 import org.roguenet.jammy.view.HeaderSprite;
 import org.roguenet.jammy.view.ThrobberSprite;
@@ -95,11 +98,30 @@ public class GameMode extends AppMode
             log.warning("Unable to add throbber, nowhere to put it");
             return;
         }
-        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos));
+
+        var type :ThrobberType = getRandomType();
+        var color :ThrobberColor = ThrobberColor.random();
+        var sprite :ThrobberSprite = new ThrobberSprite(new Throbber(pos, color, type));
         addObject(sprite, modeSprite);
         addObject(sprite.model);
         _throbbers.put(sprite.model, sprite);
         _regs.addSignalListener(sprite.touchEnded, F.callback(touchedThrobber, sprite.model));
+    }
+
+    protected function getRandomType () :ThrobberType
+    {
+        // make sure we don't ever have more than 2 of the same type on the board at a time
+        var counts :Map = Maps.newMapOf(ThrobberType);
+        for each (var throbber :Throbber in _throbbers.keys()) {
+            counts.put(throbber.type, (counts.get(throbber) || 0) + 1);
+        }
+        var types :Array = ThrobberType.values();
+        counts.forEach(function (type :ThrobberType, count :int) :void {
+            if (count >= JammyConsts.MAX_THROBBERS_PER_TYPE) {
+                Arrays.removeFirst(types, type);
+            }
+        });
+        return RAND.pick(types);
     }
 
     protected function throbStateChanged (newState :ThrobState) :void

@@ -15,13 +15,12 @@ public class Throbber extends GameObject
 {
     public const positionChanged :Signal = new Signal();
 
-    public function Throbber (position :Vector2, color :ThrobberColor = null,
-        value :ThrobberType = null)
+    public function Throbber (position :Vector2, color :ThrobberColor, type :ThrobberType)
     {
         _pos = position;
         setRadius(radiusForLevel(_level));
-        _color = color == null ? ThrobberColor.random() : color;
-        _type = value == null ? ThrobberType.random() : value;
+        _color = color;
+        _type = type;
     }
 
     public function get color () :ThrobberColor
