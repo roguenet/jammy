@@ -20,7 +20,6 @@ import flashbang.tasks.FunctionTask;
 import flashbang.tasks.SerialTask;
 
 import org.roguenet.jammy.model.Throbber;
-import org.roguenet.jammy.model.ThrobberColor;
 import org.roguenet.jammy.model.ThrobberType;
 import org.roguenet.jammy.view.BoardBackgroundSprite;
 import org.roguenet.jammy.view.HeaderSprite;
@@ -53,11 +52,9 @@ public class GameMode extends AppMode
         _regs.addSignalListener(_timer.throbStateChanged, throbStateChanged);
 
         _youSuckTokens = [];
-        for (ii = 0; ii < JammyConsts.THROBBER_LEVELS - 1; ii++) {
+        for (ii = 0; ii < JammyConsts.THROBBER_LEVELS; ii++) {
             _youSuckTokens.push(0);
         }
-        _youSuckTokens.push(
-            JammyConsts.FAST_MODE_THRESHOLD - JammyConsts.INITIAL_THROBBER_COUNT);
     }
 
     /**
@@ -384,7 +381,7 @@ class ThrobTimer
     protected var _throbTime :Number = JammyConsts.THROB_TIME_BASE / 2;
     protected var _modeTimeElapsed :Number = 0;
     protected var _state :ThrobState = ThrobState.IDLE_UP;
-    protected var _fast :Boolean = false;
+    protected var _fast :Boolean = true;
     protected var _prevModeTime :Number = HALF_TIME_BASE;
     protected var _rampUpTime :Number = RAMP_UP_TIME;
 }
