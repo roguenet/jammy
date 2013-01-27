@@ -46,7 +46,7 @@ public class HeaderSprite extends RenderedSprite
 
     public function updateTimer (time :Number) :void
     {
-        _timer.setPercent(time / JammyConsts.ROUND_TIME);
+        _timer.setPercent((JammyConsts.ROUND_TIME - time) / JammyConsts.ROUND_TIME);
     }
 
     protected function buildView () :void
