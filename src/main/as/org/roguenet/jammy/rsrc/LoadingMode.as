@@ -14,6 +14,7 @@ public class LoadingMode extends AppMode
     {
         var resources :ResourceSet = new ResourceSet();
         resources.add({type: "flump", name: "jammy", data: JAMMY});
+        resources.add({type: "flump", name: "jammy-retina", data: JAMMY_RETINA});
         SoundResources.addSounds(resources);
         resources.load(function () :void {
                 // resources loaded. kick off the game.
@@ -27,7 +28,11 @@ public class LoadingMode extends AppMode
     }
 
     protected static const log :Log = Log.getLog(LoadingMode);
-    [Embed(source="../../../../../resources/default/jammy.zip", mimeType="application/octet-stream")]
+    [Embed(source="../../../../../resources/default/jammy.zip",
+        mimeType="application/octet-stream")]
     protected static const JAMMY :Class;
+    [Embed(source="../../../../../resources/default/jammy-retina.zip",
+        mimeType="application/octet-stream")]
+    protected static const JAMMY_RETINA :Class;
 }
 }

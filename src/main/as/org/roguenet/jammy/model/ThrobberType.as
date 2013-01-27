@@ -42,7 +42,7 @@ public class ThrobberType extends Enum
 
     public function get assetName () :String
     {
-        return "jammy/" + name().toLowerCase();
+        return "jammy-retina/" + name().toLowerCase();
     }
 
     public function get value () :String

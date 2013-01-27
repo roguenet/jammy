@@ -28,7 +28,6 @@ public class StaticThrobberSprite extends RenderedSprite
     protected function buildView () :void
     {
         var img :Image = ImageResource.createImage(_model.type.assetName);
-        img.scaleX = img.scaleY = JammyConsts.BLOOD_SCALE_FACTOR;
         img.x = -JammyConsts.THROBBER_MAX_RADIUS - 10;
         img.y = -JammyConsts.THROBBER_MAX_RADIUS - 10;
         _sprite.addChild(img);
