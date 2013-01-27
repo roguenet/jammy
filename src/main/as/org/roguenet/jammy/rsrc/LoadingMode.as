@@ -28,10 +28,10 @@ public class LoadingMode extends AppMode
     }
 
     protected static const log :Log = Log.getLog(LoadingMode);
-    [Embed(source="../../../../../resources/default/jammy.zip",
+    [Embed(source="../../../../../resources/flump/normal/jammy.zip",
         mimeType="application/octet-stream")]
     protected static const JAMMY :Class;
-    [Embed(source="../../../../../resources/default/jammy-retina.zip",
+    [Embed(source="../../../../../resources/flump/retina/jammy-retina.zip",
         mimeType="application/octet-stream")]
     protected static const JAMMY_RETINA :Class;
 }
