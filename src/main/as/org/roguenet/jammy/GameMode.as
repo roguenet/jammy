@@ -288,11 +288,10 @@ public class GameMode extends AppMode
 
             // we have intersecting throbbers, grow away from them
             var quads :Set = Sets.newSetOf(Quadrant, Quadrant.values());
-            var numQuads :int = quads.size();
             for each (var throbber :Throbber in intersects) {
                 quads.remove(Quadrant.of(throbber.position.subtract(pos)));
             }
-            if (quads.size() == numQuads) {
+            if (quads.size() == 0) {
                 // we're surrounded, abandon ship!
                 break;
             }
