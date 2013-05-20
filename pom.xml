@@ -11,6 +11,13 @@
     <flex.version>4.6.0.23201</flex.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>tconkling</id>
+      <url>https://raw.github.com/tconkling/maven-repo/master</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>com.timconkling</groupId>
